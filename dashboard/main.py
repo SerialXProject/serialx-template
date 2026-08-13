@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
 from viewmodels.home_viewmodel import HomeViewModel
-
+from viewmodels.settings_viewmodel import SettingsViewModel
 
 def main():
     app = QApplication(sys.argv)
@@ -18,6 +18,8 @@ def main():
         "homeViewModel",
         home_vm
     )
+    settings_vm = SettingsViewModel()
+    engine.rootContext().setContextProperty("settingsViewModel", settings_vm)
 
     qml_file = Path(__file__).resolve().parent / "qml" / "main.qml"
 

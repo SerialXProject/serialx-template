@@ -6,11 +6,10 @@ import "../components" as Widgets
 
 Page {
     visible: true
-    property string selectedTheme: "Dark"
 
     Rectangle {
         anchors.fill: parent
-        color: appWindow.colorSurface   // oppure "#131313"
+        color: appWindow.colorSurface
     }
 
     // --- Header ---
@@ -115,8 +114,6 @@ Page {
                     Layout.fillWidth: true
                     spacing: 48
 
-                    property string selectedTheme: "Dark"
-
                     Text {
                         text: "Themes"
                         color: appWindow.colorPrimary
@@ -130,37 +127,37 @@ Page {
 
                         Widgets.ThemeCard {
                             label: "Dark"
-                            active: selectedTheme === "Dark"
+                            active: settingsViewModel.theme === "Dark"
                             previewColor: "#121212"
 
                             Layout.fillWidth: true
 
                             onClicked: {
-                                selectedTheme = "Dark";
+                                settingsViewModel.theme = "Dark";
                             }
                         }
 
                         Widgets.ThemeCard {
                             label: "Light"
-                            active: selectedTheme === "Light"
+                            active: settingsViewModel.theme === "Light"
                             previewColor: "#FFFFFF"
 
                             Layout.fillWidth: true
 
                             onClicked: {
-                                selectedTheme = "Light";
+                                settingsViewModel.theme = "Light";
                             }
                         }
 
                         Widgets.ThemeCard {
                             label: "System"
-                            active: selectedTheme === "System"
+                            active: settingsViewModel.theme === "System"
                             isGradient: true
 
                             Layout.fillWidth: true
 
                             onClicked: {
-                                selectedTheme = "System";
+                                settingsViewModel.theme = "System";
                             }
                         }
                     }
@@ -216,7 +213,7 @@ Page {
                                 font.letterSpacing: 1.5
                             }
                             Text {
-                                text: "v2.4.0-stable"
+                                text: settingsViewModel.current_version
                                 color: appWindow.colorPrimary
                                 font.pixelSize: 28
                                 font.family: stack.monoFont
@@ -244,7 +241,9 @@ Page {
                                         font.pixelSize: 18
                                     }
                                     Text {
-                                        text: "Last checked today at 09:14 AM."
+                                        text: settingsViewModel.last_checked !== ""
+                                              ? settingsViewModel.last_checked
+                                              : "Not checked yet."
                                         color: appWindow.colorOnSurfaceVariant
                                         font.pixelSize: 11
                                         Layout.fillWidth: true
@@ -257,25 +256,53 @@ Page {
                                 Layout.fillHeight: true
                             }
 
+                            QtObject {
+                                id: updateState
+                                property bool checking: false
+                            }
+
+                            Connections {
+                                target: settingsViewModel
+                                function onUpdateCheckStarted() {
+                                    updateState.checking = true;
+                                }
+                                function onUpdateCheckFinished(updateAvailable, message) {
+                                    updateState.checking = false;
+                                }
+                            }
+
                             Button {
                                 id: updateBtn
                                 Layout.fillWidth: true
+                                enabled: !updateState.checking
+
+                                onClicked: {
+                                    settingsViewModel.checkForUpdates();
+                                }
+
                                 contentItem: RowLayout {
                                     spacing: 8
                                     Item {
                                         Layout.fillWidth: true
                                     }
                                     Text {
-                                        text: "Check for updates"
+                                        text: updateState.checking ? "Checking..." : "Check for updates"
                                         color: "white"
                                         font.weight: Font.Bold
                                         font.pixelSize: 14
                                     }
                                     Image {
-                                        source: "../../../assets/refresh-ccw.svg"
+                                        source: Qt.resolvedUrl("../../assets/refresh-ccw.svg")
                                         width: 18
                                         height: 18
                                         sourceSize: Qt.size(18, 18)
+                                        RotationAnimation on rotation {
+                                            running: updateState.checking
+                                            loops: Animation.Infinite
+                                            from: 0
+                                            to: 360
+                                            duration: 800
+                                        }
                                     }
                                     Item {
                                         Layout.fillWidth: true
@@ -295,7 +322,7 @@ Page {
                                             color: "#0078d4"
                                         }
                                     }
-                                    opacity: updateBtn.pressed ? 0.9 : 1.0
+                                    opacity: updateBtn.pressed ? 0.9 : (updateState.checking ? 0.7 : 1.0)
                                     scale: updateBtn.pressed ? 0.98 : 1.0
                                     Behavior on scale {
                                         NumberAnimation {

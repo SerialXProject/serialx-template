@@ -10,21 +10,57 @@ ApplicationWindow {
     minimumWidth: 1000
     minimumHeight: 800
     title: "SerialXTemplate - Arduino Client"
-    color: "#131313"
+    color: colorSurface
 
-    // --- Design Tokens ---
-    readonly property color colorPrimary: "#a3c9ff"
-    readonly property color colorPrimaryContainer: "#0078d4"
-    readonly property color colorSurface: "#131313"
-    readonly property color colorSurfaceLow: "#1b1b1c"
-    readonly property color colorSurfaceHigh: "#2a2a2a"
-    readonly property color colorSurfaceHighest: "#353535"
-    readonly property color colorOnSurface: "#e5e2e1"
-    readonly property color colorOnSurfaceVariant: "#c0c7d4"
-    readonly property color colorTertiary: "#ffb689"
-    readonly property color colorError: "#ffb4ab"
-    readonly property color colorOutline: "#3a3a3a"
-    readonly property color outlineVariant: "#404752"
+    // --- Theme resolution ---
+    // "Dark" / "Light" / "System" arrivano da settingsViewModel.theme (persistito con QSettings)
+    readonly property bool isDark: {
+        if (settingsViewModel.theme === "Dark") return true;
+        if (settingsViewModel.theme === "Light") return false;
+        return Qt.styleHints.colorScheme === Qt.Dark; // "System"
+    }
+
+    // --- Design Tokens (Dark palette) ---
+    readonly property color darkPrimary: "#a3c9ff"
+    readonly property color darkPrimaryContainer: "#0078d4"
+    readonly property color darkSurface: "#131313"
+    readonly property color darkSurfaceLow: "#1b1b1c"
+    readonly property color darkSurfaceHigh: "#2a2a2a"
+    readonly property color darkSurfaceHighest: "#353535"
+    readonly property color darkOnSurface: "#e5e2e1"
+    readonly property color darkOnSurfaceVariant: "#c0c7d4"
+    readonly property color darkTertiary: "#ffb689"
+    readonly property color darkError: "#ffb4ab"
+    readonly property color darkOutline: "#3a3a3a"
+    readonly property color darkOutlineVariant: "#404752"
+
+    // --- Design Tokens (Light palette) ---
+    readonly property color lightPrimary: "#0058b0"
+    readonly property color lightPrimaryContainer: "#a3c9ff"
+    readonly property color lightSurface: "#fdfbff"
+    readonly property color lightSurfaceLow: "#f5f5f7"
+    readonly property color lightSurfaceHigh: "#e8e8ea"
+    readonly property color lightSurfaceHighest: "#dcdce0"
+    readonly property color lightOnSurface: "#1a1c1e"
+    readonly property color lightOnSurfaceVariant: "#43474e"
+    readonly property color lightTertiary: "#8f4c2e"
+    readonly property color lightError: "#ba1a1a"
+    readonly property color lightOutline: "#d0d0d4"
+    readonly property color lightOutlineVariant: "#c4c8d0"
+
+    // --- Colori attivi: scelgono dark o light in base a isDark ---
+    readonly property color colorPrimary: isDark ? darkPrimary : lightPrimary
+    readonly property color colorPrimaryContainer: isDark ? darkPrimaryContainer : lightPrimaryContainer
+    readonly property color colorSurface: isDark ? darkSurface : lightSurface
+    readonly property color colorSurfaceLow: isDark ? darkSurfaceLow : lightSurfaceLow
+    readonly property color colorSurfaceHigh: isDark ? darkSurfaceHigh : lightSurfaceHigh
+    readonly property color colorSurfaceHighest: isDark ? darkSurfaceHighest : lightSurfaceHighest
+    readonly property color colorOnSurface: isDark ? darkOnSurface : lightOnSurface
+    readonly property color colorOnSurfaceVariant: isDark ? darkOnSurfaceVariant : lightOnSurfaceVariant
+    readonly property color colorTertiary: isDark ? darkTertiary : lightTertiary
+    readonly property color colorError: isDark ? darkError : lightError
+    readonly property color colorOutline: isDark ? darkOutline : lightOutline
+    readonly property color outlineVariant: isDark ? darkOutlineVariant : lightOutlineVariant
 
     FontLoader {
         id: interFont
@@ -36,11 +72,11 @@ ApplicationWindow {
         source: "https://fonts.gstatic.com/s/roboto/v30/KFOjCnqEu92Fr1Mu51TzBhc9.ttf"
     }
 
-    // ✅ ESPOSIZIONE FONT
+    // ESPOSIZIONE FONT
     property alias interFont: interFont
     property alias monoFont: monoFont
 
-    // ✅ ESPOSIZIONE STACK
+    // ESPOSIZIONE STACK
     property alias stack: stack
 
     StackView {

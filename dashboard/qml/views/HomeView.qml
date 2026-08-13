@@ -6,8 +6,6 @@ import "../components" as Widgets
 Page {
     id: page
 
-    // ...existing code...
-
     Widgets.ConnectionMenu {
         id: connectionMenu
         homeViewModel: homeViewModel
@@ -15,7 +13,7 @@ Page {
 
     Rectangle {
         anchors.fill: parent
-        color: appWindow.colorSurface   // oppure "#131313"
+        color: appWindow.colorSurface
     }
 
     ColumnLayout {
@@ -28,7 +26,7 @@ Page {
         Rectangle {
             Layout.fillWidth: true
             height: 70
-            color: "#131313"
+            color: appWindow.colorSurface
 
             RowLayout {
                 anchors.fill: parent
@@ -36,7 +34,7 @@ Page {
 
                 Text {
                     text: "SerialXTemplate"
-                    color: "#60a5fa"
+                    color: appWindow.colorPrimary
                     font.pixelSize: 20
                     font.weight: Font.Bold
                     font.family: appWindow.interFont.name
@@ -187,11 +185,11 @@ Page {
                             gradient: Gradient {
                                 GradientStop {
                                     position: 0.0
-                                    color: "#60a5fa"
+                                    color: appWindow.colorPrimary
                                 }
                                 GradientStop {
                                     position: 1.0
-                                    color: "#1d4ed8"
+                                    color: appWindow.colorPrimaryContainer
                                 }
                             }
                         }
@@ -221,11 +219,11 @@ Page {
                             gradient: Gradient {
                                 GradientStop {
                                     position: 0.0
-                                    color: "#60a5fa"
+                                    color: appWindow.colorPrimary
                                 }
                                 GradientStop {
                                     position: 1.0
-                                    color: "#1d4ed8"
+                                    color: appWindow.colorPrimaryContainer
                                 }
                             }
                         }
@@ -323,7 +321,7 @@ Page {
 
                                 background: Rectangle {
                                     radius: 6
-                                    color: highlighted ? "#1d4ed8" : "transparent"
+                                    color: highlighted ? appWindow.colorPrimaryContainer : "transparent"
                                 }
 
                                 contentItem: Text {
@@ -347,11 +345,11 @@ Page {
                             gradient: Gradient {
                                 GradientStop {
                                     position: 0.0
-                                    color: "#60a5fa"
+                                    color: appWindow.colorPrimary
                                 }
                                 GradientStop {
                                     position: 1.0
-                                    color: "#1d4ed8"
+                                    color: appWindow.colorPrimaryContainer
                                 }
                             }
                         }
