@@ -11,7 +11,7 @@ Page {
 
     Rectangle {
         anchors.fill: parent
-        color: appWindow.colorSurface   // oppure "#131313"
+        color: appWindow.colorSurface
     }
 
     ColumnLayout {
@@ -22,8 +22,8 @@ Page {
         Rectangle {
             Layout.fillWidth: true
             height: 56
-            color: "#1a1a1a"
-            border.color: Qt.rgba(0.25, 0.28, 0.32, 0.1)
+            color: appWindow.colorSurfaceLow
+            border.color: appWindow.colorOutline
 
             RowLayout {
                 anchors.fill: parent
@@ -33,7 +33,7 @@ Page {
 
                 Text {
                     text: "SerialX Projects"
-                    color: "white"
+                    color: appWindow.colorOnSurface
                     font.pixelSize: 18
                     font.bold: true
                     font.letterSpacing: -0.5
@@ -42,12 +42,12 @@ Page {
                 Rectangle {
                     width: 1
                     height: 16
-                    color: Qt.rgba(0.25, 0.28, 0.32, 0.3)
+                    color: appWindow.colorOutlineVariant
                 }
 
                 Text {
                     text: "SerialX"
-                    color: "#60a5fa"
+                    color: appWindow.colorPrimary
                     font.family: "JetBrains Mono"
                     font.pixelSize: 12
                 }
@@ -94,7 +94,7 @@ Page {
                             Layout.fillWidth: true
                         }
                         Text {
-                            text: Math.floor(systemNode.progress) + "%"
+                            text: Math.floor(loadingViewModel.progress) + "%"
                             color: appWindow.colorOnSurfaceVariant
                             font.family: "JetBrains Mono"
                             font.pixelSize: 40
@@ -107,11 +107,11 @@ Page {
                         Layout.fillWidth: true
                         height: 16
                         radius: 8
-                        color: "#353535"
+                        color: appWindow.colorSurfaceHighest
                         clip: true
 
                         Rectangle {
-                            width: parent.width * (systemNode.progress / 100)
+                            width: parent.width * (loadingViewModel.progress / 100)
                             height: parent.height
                             radius: 8
                             gradient: Gradient {
@@ -165,9 +165,9 @@ Page {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    color: "#0e0e0e"
+                    color: appWindow.colorSurface
                     radius: 12
-                    border.color: Qt.rgba(0.25, 0.28, 0.32, 0.1)
+                    border.color: appWindow.colorOutline
                     clip: true
 
                     ColumnLayout {
@@ -178,7 +178,7 @@ Page {
                         Rectangle {
                             Layout.fillWidth: true
                             height: 48
-                            color: "#1b1b1c"
+                            color: appWindow.colorSurfaceLow
                             radius: 12
 
                             // Mask bottom corners
@@ -186,7 +186,7 @@ Page {
                                 anchors.bottom: parent.bottom
                                 width: parent.width
                                 height: 12
-                                color: "#1b1b1c"
+                                color: appWindow.colorSurfaceLow
                             }
 
                             RowLayout {
@@ -195,10 +195,6 @@ Page {
                                 anchors.rightMargin: 24
                                 spacing: 12
 
-                                Text {
-                                    text: "📟"
-                                    font.pixelSize: 14
-                                }
                                 Text {
                                     text: "EXECUTION LOG"
                                     color: appWindow.colorOnSurfaceVariant
@@ -241,27 +237,27 @@ Page {
                             id: logView
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            model: systemNode.logs
+                            model: loadingViewModel.logs
                             clip: true
                             delegate: RowLayout {
                                 width: logView.width
                                 spacing: 12
                                 Text {
                                     text: "[" + modelData.time + "]"
-                                    color: "#525252"
+                                    color: appWindow.colorOnSurfaceVariant
                                     font.family: "JetBrains Mono"
                                     font.pixelSize: 13
                                 }
                                 Text {
                                     text: modelData.level + ":"
-                                    color: modelData.level === "INFO" ? appWindow.colorPrimary : modelData.level === "WARN" ? appWindow.colorWarn : modelData.level === "ERROR" ? appWindow.colorError : "#88a3c9ff"
+                                    color: modelData.level === "INFO" ? appWindow.colorPrimary : modelData.level === "WARN" ? appWindow.colorWarn : modelData.level === "ERROR" ? appWindow.colorError : appWindow.colorOnSurfaceVariant
                                     font.family: "JetBrains Mono"
                                     font.pixelSize: 13
                                     font.bold: true
                                 }
                                 Text {
                                     text: modelData.msg
-                                    color: Qt.rgba(0.75, 0.78, 0.83, 0.8)
+                                    color: appWindow.colorOnSurface
                                     font.family: "JetBrains Mono"
                                     font.pixelSize: 13
                                     Layout.fillWidth: true
@@ -281,13 +277,13 @@ Page {
                     Column {
                         Text {
                             text: "SYSTEM LOAD"
-                            color: "#737373"
+                            color: appWindow.colorOnSurfaceVariant
                             font.pixelSize: 10
                             font.bold: true
                             font.letterSpacing: 1
                         }
                         Text {
-                            text: systemNode.systemLoad
+                            text: loadingViewModel.systemLoad
                             color: appWindow.colorOnSurface
                             font.family: "JetBrains Mono"
                             font.pixelSize: 12
@@ -297,7 +293,7 @@ Page {
                     Rectangle {
                         width: 1
                         height: 32
-                        color: Qt.rgba(0.25, 0.28, 0.32, 0.2)
+                        color: appWindow.colorOutlineVariant
                     }
 
                     Item {
@@ -329,7 +325,7 @@ Page {
                                     text: "✕ Cancel Operation"
                                     font.bold: true
 
-                                    color: cancelButton.hovered ? appWindow.colorError : "#9cb7df"
+                                    color: cancelButton.hovered ? appWindow.colorError : appWindow.colorOnSurfaceVariant
                                 }
                             }
                         }
@@ -346,7 +342,7 @@ Page {
         Rectangle {
             Layout.fillWidth: true
             height: 32
-            color: "#0a0a0a"
+            color: appWindow.colorSurfaceLow
 
             RowLayout {
                 anchors.fill: parent
@@ -355,7 +351,7 @@ Page {
 
                 Text {
                     text: "V2.4.0 TECHNICAL ATELIER"
-                    color: "#525252"
+                    color: appWindow.colorOnSurfaceVariant
                     font.family: "JetBrains Mono"
                     font.pixelSize: 10
                     font.letterSpacing: 1
@@ -378,7 +374,7 @@ Page {
                         }
                         Text {
                             text: "CONNECTION: STABLE"
-                            color: "#60a5fa"
+                            color: appWindow.colorPrimary
                             font.family: "JetBrains Mono"
                             font.pixelSize: 10
                             font.letterSpacing: 1
@@ -386,7 +382,7 @@ Page {
                     }
                     Text {
                         text: "LATENCY: 24MS"
-                        color: "#525252"
+                        color: appWindow.colorOnSurfaceVariant
                         font.family: "JetBrains Mono"
                         font.pixelSize: 10
                         font.letterSpacing: 1

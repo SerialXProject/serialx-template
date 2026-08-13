@@ -31,6 +31,7 @@ ApplicationWindow {
     readonly property color darkOnSurfaceVariant: "#c0c7d4"
     readonly property color darkTertiary: "#ffb689"
     readonly property color darkError: "#ffb4ab"
+    readonly property color darkWarn: "#f5a623"
     readonly property color darkOutline: "#3a3a3a"
     readonly property color darkOutlineVariant: "#404752"
 
@@ -45,6 +46,7 @@ ApplicationWindow {
     readonly property color lightOnSurfaceVariant: "#43474e"
     readonly property color lightTertiary: "#8f4c2e"
     readonly property color lightError: "#ba1a1a"
+    readonly property color lightWarn: "#a15c00"
     readonly property color lightOutline: "#d0d0d4"
     readonly property color lightOutlineVariant: "#c4c8d0"
 
@@ -59,6 +61,7 @@ ApplicationWindow {
     readonly property color colorOnSurfaceVariant: isDark ? darkOnSurfaceVariant : lightOnSurfaceVariant
     readonly property color colorTertiary: isDark ? darkTertiary : lightTertiary
     readonly property color colorError: isDark ? darkError : lightError
+    readonly property color colorWarn: isDark ? darkWarn : lightWarn
     readonly property color colorOutline: isDark ? darkOutline : lightOutline
     readonly property color outlineVariant: isDark ? darkOutlineVariant : lightOutlineVariant
 
