@@ -1,5 +1,6 @@
 from PySide6.QtCore import QObject, Property, Signal, Slot, QTimer, QDateTime
 
+
 class HomeViewModel(QObject):
 
     timeChanged = Signal()
@@ -40,5 +41,5 @@ class HomeViewModel(QObject):
         from pathlib import Path
         import webbrowser
 
-        file_path = Path(__file__).resolve().parents[3] / "docs" / "index.html"
+        file_path = Path(__file__).resolve().parents[1] / "docs" / "index.html"
         webbrowser.open(f"file://{file_path}")

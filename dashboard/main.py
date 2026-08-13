@@ -4,9 +4,7 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-
-from app.viewmodels.home_viewmodel import HomeViewModel
+from viewmodels.home_viewmodel import HomeViewModel
 
 
 def main():
@@ -21,7 +19,7 @@ def main():
         home_vm
     )
 
-    qml_file = Path(__file__).parents[2] / "qt/qml/main.qml"
+    qml_file = Path(__file__).resolve().parent / "qml" / "main.qml"
 
     engine.load(str(qml_file))
 
