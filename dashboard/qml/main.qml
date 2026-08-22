@@ -34,6 +34,7 @@ ApplicationWindow {
     readonly property color darkWarn: "#f5a623"
     readonly property color darkOutline: "#3a3a3a"
     readonly property color darkOutlineVariant: "#404752"
+    readonly property color darkOnPrimaryContainer: "#ffffff"
 
     // --- Design Tokens (Light palette) ---
     readonly property color lightPrimary: "#0058b0"
@@ -49,6 +50,7 @@ ApplicationWindow {
     readonly property color lightWarn: "#a15c00"
     readonly property color lightOutline: "#d0d0d4"
     readonly property color lightOutlineVariant: "#c4c8d0"
+    readonly property color lightOnPrimaryContainer: "#001b3d"
 
     // --- Colori attivi: scelgono dark o light in base a isDark ---
     readonly property color colorPrimary: isDark ? darkPrimary : lightPrimary
@@ -64,6 +66,7 @@ ApplicationWindow {
     readonly property color colorWarn: isDark ? darkWarn : lightWarn
     readonly property color colorOutline: isDark ? darkOutline : lightOutline
     readonly property color outlineVariant: isDark ? darkOutlineVariant : lightOutlineVariant
+    readonly property color colorOnPrimaryContainer: isDark ? darkOnPrimaryContainer : lightOnPrimaryContainer
 
     FontLoader {
         id: interFont

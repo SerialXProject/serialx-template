@@ -1,13 +1,14 @@
+import "../components" as Widgets
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import "../components" as Widgets
 
 Page {
     id: page
 
     Widgets.ConnectionMenu {
         id: connectionMenu
+
         homeViewModel: homeViewModel
     }
 
@@ -56,11 +57,11 @@ Page {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-
                             onClicked: {
                                 appWindow.stack.push(Qt.resolvedUrl("SettingsView.qml"));
                             }
                         }
+
                     }
 
                     Text {
@@ -72,14 +73,17 @@ Page {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-
                             onClicked: {
                                 homeViewModel.openHelp();
                             }
                         }
+
                     }
+
                 }
+
             }
+
         }
 
         // Title Area
@@ -103,6 +107,7 @@ Page {
                     color: appWindow.colorOnSurfaceVariant
                     font.family: appWindow.interFont.name
                 }
+
             }
 
             Item {
@@ -114,6 +119,7 @@ Page {
 
                 Widgets.SystemCard {
                     id: systemTime
+
                     title: "SYSTEM TIME"
                     value: homeViewModel.time
                     isTime: true
@@ -121,11 +127,14 @@ Page {
 
                 Widgets.SystemCard {
                     id: systemDate
+
                     title: "SYSTEM DATE"
                     value: homeViewModel.date
                     isTime: false
                 }
+
             }
+
         }
 
         // --- Main Content ---
@@ -144,7 +153,6 @@ Page {
                     Layout.minimumWidth: 300
                     Layout.minimumHeight: 450
                     Layout.preferredWidth: 1000
-
                     color: appWindow.colorSurfaceLow
                     radius: 8
 
@@ -153,8 +161,11 @@ Page {
                         anchors.margins: 30
                         spacing: 20
                     }
+
                 }
+
             }
+
         }
 
         // --- Footer ---
@@ -179,19 +190,26 @@ Page {
                     Button {
                         width: 160
                         height: 50
+                        onClicked: {
+                            console.log("IMPORT clicked");
+                        }
 
                         background: Rectangle {
                             radius: 8
+
                             gradient: Gradient {
                                 GradientStop {
-                                    position: 0.0
+                                    position: 0
                                     color: appWindow.colorPrimary
                                 }
+
                                 GradientStop {
-                                    position: 1.0
+                                    position: 1
                                     color: appWindow.colorPrimaryContainer
                                 }
+
                             }
+
                         }
 
                         contentItem: Text {
@@ -204,28 +222,32 @@ Page {
                             verticalAlignment: Text.AlignVCenter
                         }
 
-                        onClicked: {
-                            console.log("IMPORT clicked");
-                        }
                     }
 
                     // EXPORT BUTTON
                     Button {
                         width: 160
                         height: 50
+                        onClicked: {
+                            console.log("EXPORT clicked");
+                        }
 
                         background: Rectangle {
                             radius: 8
+
                             gradient: Gradient {
                                 GradientStop {
-                                    position: 0.0
+                                    position: 0
                                     color: appWindow.colorPrimary
                                 }
+
                                 GradientStop {
-                                    position: 1.0
+                                    position: 1
                                     color: appWindow.colorPrimaryContainer
                                 }
+
                             }
+
                         }
 
                         contentItem: Text {
@@ -238,10 +260,8 @@ Page {
                             verticalAlignment: Text.AlignVCenter
                         }
 
-                        onClicked: {
-                            console.log("EXPORT clicked");
-                        }
                     }
+
                 }
 
                 Item {
@@ -270,20 +290,51 @@ Page {
 
                         ComboBox {
                             id: portCombo
-                            model: ["COM1", "COM2", "COM3", "COM4"]
+
+                            model: ["COM1", "COM2", "COM3", "COM4", "NET(TCP)"]
+                            popup.width: 75
+
+                            popup.background: Rectangle {
+                                color: appWindow.colorSurfaceHigh
+                                radius: 8
+                                border.color: appWindow.colorOutline
+                                border.width: 1
+                            }
 
                             background: Rectangle {
                                 color: "transparent"
                             }
-                            indicator: Item {}
+
+                            indicator: Item {
+                            }
 
                             contentItem: Text {
                                 text: portCombo.currentText
-                                color: appWindow.colorPrimary
+                                color: appWindow.colorOnSurface
                                 font.pixelSize: 14
                                 font.family: appWindow.monoFont.name
                             }
+
+                            delegate: ItemDelegate {
+                                width: portCombo.popup.width
+                                text: modelData
+                                highlighted: portCombo.highlightedIndex === index
+
+                                background: Rectangle {
+                                    radius: 6
+                                    color: highlighted ? appWindow.colorPrimaryContainer : "transparent"
+                                }
+
+                                contentItem: Text {
+                                    text: modelData
+                                    color: highlighted ? appWindow.colorOnPrimaryContainer : appWindow.colorOnSurface
+                                    font.family: appWindow.monoFont.name
+                                }
+
+                            }
+
                         }
+
                         Rectangle {
                             width: 1
                             height: 20
@@ -299,12 +350,23 @@ Page {
 
                         ComboBox {
                             id: baudCombo
+
+                            popup.width: 75
                             model: ["9600", "19200", "38400", "57600", "115200"]
+
+                            popup.background: Rectangle {
+                                color: appWindow.colorSurfaceHigh
+                                radius: 8
+                                border.color: appWindow.colorOutline
+                                border.width: 1
+                            }
 
                             background: Rectangle {
                                 color: "transparent"
                             }
-                            indicator: Item {}
+
+                            indicator: Item {
+                            }
 
                             contentItem: Text {
                                 text: baudCombo.currentText
@@ -314,9 +376,8 @@ Page {
                             }
 
                             delegate: ItemDelegate {
-                                width: baudCombo.width
+                                width: baudCombo.popup.width
                                 text: modelData
-
                                 highlighted: baudCombo.highlightedIndex === index
 
                                 background: Rectangle {
@@ -326,32 +387,45 @@ Page {
 
                                 contentItem: Text {
                                     text: modelData
-                                    color: highlighted ? "white" : appWindow.colorOnSurface
+                                    color: highlighted ? appWindow.colorOnSurface : appWindow.colorOnSurface
                                     font.family: appWindow.monoFont.name
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
+
                 Row {
                     spacing: 15
+
                     // CONNECT BUTTON
                     Button {
                         width: 160
                         height: 50
+                        onClicked: {
+                            connectionMenu.open();
+                        }
 
                         background: Rectangle {
                             radius: 8
+
                             gradient: Gradient {
                                 GradientStop {
-                                    position: 0.0
+                                    position: 0
                                     color: appWindow.colorPrimary
                                 }
+
                                 GradientStop {
-                                    position: 1.0
+                                    position: 1
                                     color: appWindow.colorPrimaryContainer
                                 }
+
                             }
+
                         }
 
                         contentItem: Text {
@@ -364,12 +438,14 @@ Page {
                             verticalAlignment: Text.AlignVCenter
                         }
 
-                        onClicked: {
-                            connectionMenu.open();
-                        }
                     }
+
                 }
+
             }
+
         }
+
     }
+
 }
