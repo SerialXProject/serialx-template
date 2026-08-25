@@ -17,6 +17,12 @@ Page {
         property bool importing: false
     }
 
+    // --- Content panel state ---
+    QtObject {
+        id: contentState
+        property string activeMode: "" // "" = vuoto, "var_edit" = editor variabili
+    }
+
     Connections {
         target: homeViewModel
         function onExportStarted() {
@@ -76,6 +82,22 @@ Page {
 
                 Row {
                     spacing: 20
+
+                    Text {
+                        text: "editor"
+                        font.pixelSize: 24
+                        color: contentState.activeMode === "var_edit" ? appWindow.colorPrimary : appWindow.colorOnSurfaceVariant
+                        font.family: "Material Symbols Outlined"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                contentState.activeMode = contentState.activeMode === "var_edit" ? "" : "var_edit";
+                            }
+                        }
+
+                    }
 
                     Text {
                         text: "settings"
@@ -189,6 +211,14 @@ Page {
                         anchors.fill: parent
                         anchors.margins: 30
                         spacing: 20
+
+                        Loader {
+                            id: contentLoader
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            source: contentState.activeMode === "var_edit" ? Qt.resolvedUrl("VarEditView.qml") : ""
+                        }
+
                     }
 
                 }
