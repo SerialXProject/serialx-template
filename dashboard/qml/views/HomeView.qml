@@ -6,6 +6,35 @@ import QtQuick.Layouts
 Page {
     id: page
 
+    // --- Export / Import state ---
+    QtObject {
+        id: exportState
+        property bool exporting: false
+    }
+
+    QtObject {
+        id: importState
+        property bool importing: false
+    }
+
+    Connections {
+        target: homeViewModel
+        function onExportStarted() {
+            exportState.exporting = true;
+        }
+        function onExportFinished(success, message) {
+            exportState.exporting = false;
+            console.log(message);
+        }
+        function onImportStarted() {
+            importState.importing = true;
+        }
+        function onImportFinished(success, message) {
+            importState.importing = false;
+            console.log(message);
+        }
+    }
+
     Widgets.ConnectionMenu {
         id: connectionMenu
 
@@ -188,14 +217,18 @@ Page {
 
                     // IMPORT BUTTON
                     Button {
+                        id: importBtn
+
                         width: 160
                         height: 50
+                        enabled: !importState.importing
                         onClicked: {
-                            console.log("IMPORT clicked");
+                            homeViewModel.importData();
                         }
 
                         background: Rectangle {
                             radius: 8
+                            opacity: importBtn.pressed ? 0.9 : (importState.importing ? 0.7 : 1)
 
                             gradient: Gradient {
                                 GradientStop {
@@ -213,7 +246,7 @@ Page {
                         }
 
                         contentItem: Text {
-                            text: "IMPORT"
+                            text: importState.importing ? "IMPORTING..." : "IMPORT"
                             font.pixelSize: 12
                             font.bold: true
                             font.letterSpacing: 1
@@ -226,14 +259,18 @@ Page {
 
                     // EXPORT BUTTON
                     Button {
+                        id: exportBtn
+
                         width: 160
                         height: 50
+                        enabled: !exportState.exporting
                         onClicked: {
-                            console.log("EXPORT clicked");
+                            homeViewModel.exportData();
                         }
 
                         background: Rectangle {
                             radius: 8
+                            opacity: exportBtn.pressed ? 0.9 : (exportState.exporting ? 0.7 : 1)
 
                             gradient: Gradient {
                                 GradientStop {
@@ -251,7 +288,7 @@ Page {
                         }
 
                         contentItem: Text {
-                            text: "EXPORT"
+                            text: exportState.exporting ? "EXPORTING..." : "EXPORT"
                             font.pixelSize: 12
                             font.bold: true
                             font.letterSpacing: 1
@@ -291,8 +328,8 @@ Page {
                         ComboBox {
                             id: portCombo
 
-                            model: ["COM1", "COM2", "COM3", "COM4", "NET(TCP)"]
-                            popup.width: 75
+                            model: homeViewModel.availablePorts
+                            popup.width: 90
 
                             popup.background: Rectangle {
                                 color: appWindow.colorSurfaceHigh
@@ -342,7 +379,7 @@ Page {
                         }
 
                         Text {
-                            text: "BAUD RATE"
+                            text: portCombo.currentText === "NET(TCP)" ? "IP ADDRESS" : "BAUD RATE"
                             font.pixelSize: 10
                             color: appWindow.colorOnSurfaceVariant
                             font.family: appWindow.monoFont.name
@@ -351,6 +388,7 @@ Page {
                         ComboBox {
                             id: baudCombo
 
+                            visible: portCombo.currentText !== "NET(TCP)"
                             popup.width: 75
                             model: ["9600", "19200", "38400", "57600", "115200"]
 
@@ -393,6 +431,26 @@ Page {
 
                             }
 
+                        }
+
+                        TextField {
+                            id: ipField
+
+                            visible: portCombo.currentText === "NET(TCP)"
+                            Layout.fillWidth: true
+                            placeholderText: "192.168.1.100"
+                            color: appWindow.colorOnSurface
+                            font.pixelSize: 14
+                            font.family: appWindow.monoFont.name
+                            selectByMouse: true
+
+                            background: Rectangle {
+                                color: "transparent"
+                            }
+
+                            validator: RegularExpressionValidator {
+                                regularExpression: /^(\d{1,3}\.){0,3}\d{0,3}$/
+                            }
                         }
 
                     }

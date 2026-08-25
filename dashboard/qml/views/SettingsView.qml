@@ -75,6 +75,7 @@ Page {
         width: parent.width
         contentHeight: mainLayout.height + 100
         clip: true
+        boundsBehavior: Flickable.StopAtBounds
 
         ColumnLayout {
             id: mainLayout
