@@ -216,7 +216,7 @@ Page {
                             id: contentLoader
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            source: contentState.activeMode === "var_edit" ? Qt.resolvedUrl("VarEditView.qml") : ""
+                            source: contentState.activeMode === "var_edit" ? Qt.resolvedUrl("VarEditView.qml") : Qt.resolvedUrl("CustomView.qml")
                         }
 
                     }
