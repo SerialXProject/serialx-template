@@ -8,7 +8,7 @@ class VarEditViewModel(QObject):
     variableSent = Signal(str, bool, str)   # (name, success, message)
     functionRun = Signal(str, bool, str)    # (name, success, message)
 
-    def __init__(self):
+    def __init__(self, home_viewmodel=None):
         super().__init__()
 
         # Ogni variabile: {"name": str, "type": str, "value": str}
@@ -16,6 +16,9 @@ class VarEditViewModel(QObject):
 
         # Ogni funzione: {"name": str}
         self._functions = []
+        
+        # Riferimento al viewmodel home per eseguire funzioni
+        self._home_viewmodel = home_viewmodel
 
     # --- variabili ---
 
@@ -50,6 +53,20 @@ class VarEditViewModel(QObject):
         self.variablesChanged.emit()
         self.functionsChanged.emit()
 
+    @Slot(list, list)
+    def loadVariablesFromSerial(self, variables_data, functions_data):
+        """
+        Carica le variabili e funzioni da una connessione seriale.
+        
+        Args:
+            variables_data: lista di dict con chiavi "name", "type", "value"
+            functions_data: lista di dict con chiave "name"
+        """
+        self._variables = variables_data
+        self._functions = functions_data
+        self.variablesChanged.emit()
+        self.functionsChanged.emit()
+
     # --- azioni ---
 
     @Slot(str, str)
@@ -64,10 +81,20 @@ class VarEditViewModel(QObject):
 
     @Slot(str)
     def runFunction(self, name):
-        # TODO: logica reale di esecuzione (es. comando seriale)
+        """
+        Esegue una funzione sul device Arduino.
+        
+        Args:
+            name: nome della funzione da eseguire
+        """
         try:
             print(f"Running function {name}")
-            # ... esecuzione reale qui ...
-            self.functionRun.emit(name, True, f"{name} executed")
+            
+            if self._home_viewmodel:
+                result = self._home_viewmodel.runFunction(name)
+                self.functionRun.emit(name, True, f"{name} executed successfully")
+            else:
+                raise RuntimeError("HomeViewModel not available")
+                
         except Exception as e:
             self.functionRun.emit(name, False, f"Error running {name}: {str(e)}")

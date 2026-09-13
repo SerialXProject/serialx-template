@@ -233,7 +233,7 @@ RowLayout {
 
                         background: Rectangle {
                             radius: 6
-                            color: appWindow.colorPrimaryContainer
+                            color: appWindow.colorPrimary
                         }
 
                         contentItem: Text {

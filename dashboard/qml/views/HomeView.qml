@@ -17,6 +17,12 @@ Page {
         property bool importing: false
     }
 
+    // --- Serial connection state ---
+    QtObject {
+        id: serialState
+        property bool connecting: false
+    }
+
     // --- Content panel state ---
     QtObject {
         id: contentState
@@ -38,6 +44,19 @@ Page {
         function onImportFinished(success, message) {
             importState.importing = false;
             console.log(message);
+        }
+        function onSerialConnectionStarted() {
+            serialState.connecting = true;
+            console.log("Serial connection started...");
+        }
+        function onSerialConnectionFinished(success, message) {
+            serialState.connecting = false;
+            console.log("Serial connection finished: " + message);
+            if (success) {
+                console.log("Variables loaded from serial connection");
+            } else {
+                console.log("Connection error: " + message);
+            }
         }
     }
 
@@ -494,12 +513,23 @@ Page {
                     Button {
                         width: 160
                         height: 50
+                        enabled: !serialState.connecting
                         onClicked: {
-                            connectionMenu.open();
+                            if (contentState.activeMode === "var_edit") {
+                                // In var_edit mode: direct serial connection without navigating to LoadingView
+                                let port = portCombo.currentText;
+                                let baudrate = portCombo.currentText === "NET(TCP)" ? "Net/Tcp" : baudCombo.currentText;
+                                let ipAddress = ipField.text;
+                                homeViewModel.connectSerialAndLoadVariables(port, baudrate, ipAddress);
+                            } else {
+                                // Normal mode: show connection menu
+                                connectionMenu.open();
+                            }
                         }
 
                         background: Rectangle {
                             radius: 8
+                            opacity: parent.pressed ? 0.9 : (serialState.connecting ? 0.7 : 1)
 
                             gradient: Gradient {
                                 GradientStop {
@@ -517,7 +547,7 @@ Page {
                         }
 
                         contentItem: Text {
-                            text: "CONNECT"
+                            text: serialState.connecting ? "CONNECTING..." : "CONNECT"
                             font.pixelSize: 12
                             font.bold: true
                             font.letterSpacing: 1

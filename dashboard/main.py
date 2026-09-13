@@ -14,10 +14,13 @@ def main():
 
     engine = QQmlApplicationEngine()
 
-    home_vm = HomeViewModel()
     settings_vm = SettingsViewModel()
     loading_vm = LoadingViewModel()
     var_edit_vm = VarEditViewModel()
+    home_vm = HomeViewModel(var_edit_viewmodel=var_edit_vm)
+    
+    # Passiamo homeViewModel a varEditViewModel per l'esecuzione delle funzioni
+    var_edit_vm._home_viewmodel = home_vm
 
     engine.rootContext().setContextProperty("homeViewModel", home_vm)
     engine.rootContext().setContextProperty("settingsViewModel", settings_vm)
