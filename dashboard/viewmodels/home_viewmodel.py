@@ -3,6 +3,7 @@ import csv
 import webbrowser
 import json
 from pySerialX.serialx_python_integration import SerialX
+from pySerialX.serialx_jit_interpreter import SerialXInterpreter
 
 from PySide6.QtCore import QObject, Property, Signal, Slot, QTimer, QDateTime, QThread
 from PySide6.QtWidgets import QFileDialog
@@ -130,7 +131,6 @@ class HomeViewModel(QObject):
             print(f"Connected to {port} at {baudrate} baud")
 
             communication.auth("secure")
-            from pySerialX.serialx_jit_interpreter import SerialXInterpreter
             communication.communication.communication.send_line("help")
             result = SerialXInterpreter.decode_help(communication.communication._read_all_lines())
 
@@ -142,7 +142,8 @@ class HomeViewModel(QObject):
                 variables_for_viewmodel.append({
                     "name": var['name'],
                     "type": var['type'],
-                    "value": ""  # Valore iniziale vuoto, verrà popolato dall'utente
+                    "value":  communication.get(var['type'], var['name'], var['is_virtual']),
+                    "can_set": var['can_set']
                 })
             
             functions_for_viewmodel = []
@@ -178,3 +179,26 @@ class HomeViewModel(QObject):
         except Exception as e:
             print(f"Error running function {function_name}: {str(e)}")
             raise
+
+    @Slot(str)
+    def setVariable(self, type, name, value):
+        """
+        Modifica una variabile sul device Arduino.
+        
+        Args:
+            tipo: tipo di dato della variabile (es. "int", "float", "bool", "string")
+            name: nome della variabile
+            value: nuovo valore della variabile
+        """
+        try:
+            if not self._communication:
+                raise RuntimeError("No active serial connection")
+            
+            print(f"Change value: {name} di type {type} a {value}")
+            result = self._communication.set(type, name, value)
+            print(f"Function result: {result}")
+            return result
+        except Exception as e:
+            print(f"Error during change value {name}: {str(e)}")
+            raise
+

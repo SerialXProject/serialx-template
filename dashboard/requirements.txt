@@ -1,4 +1,4 @@
 pyserial
 PySide6
 pyinstaller
-pySerialX @ https://github.com/SerialXProject/pySerialX/releases/latest/download/pyserialx-1.1.0-py3-none-any.whl
+pySerialX @ https://github.com/SerialXProject/pySerialX/releases/latest/download/pyserialx-1.1.1-py3-none-any.whl

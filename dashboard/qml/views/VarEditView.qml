@@ -128,13 +128,14 @@ RowLayout {
                     Button {
                         Layout.preferredWidth: 70
                         Layout.preferredHeight: 30
+                        enabled: modelData.can_set
                         onClicked: {
-                            varEditViewModel.sendVariable(modelData.name, valueField.text);
+                            varEditViewModel.sendVariable(modelData.type, modelData.name, valueField.text);
                         }
 
                         background: Rectangle {
                             radius: 6
-                            color: appWindow.colorPrimary
+                            color: parent.enabled ? appWindow.colorPrimary : appWindow.colorOutline
                         }
 
                         contentItem: Text {

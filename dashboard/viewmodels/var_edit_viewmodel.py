@@ -69,13 +69,15 @@ class VarEditViewModel(QObject):
 
     # --- azioni ---
 
-    @Slot(str, str)
-    def sendVariable(self, name, value):
-        # TODO: logica reale di invio al device (es. comando seriale)
+    @Slot(str, str, str)
+    def sendVariable(self, type, name, value):
         try:
             print(f"Sending {name} = {value}")
-            # ... invio reale qui ...
-            self.variableSent.emit(name, True, f"{name} updated to {value}")
+            if self._home_viewmodel:
+                result = self._home_viewmodel.setVariable(type, name, value)
+                self.variableSent.emit(name, True, f"{name} updated to {value}")
+            else:
+                raise RuntimeError("HomeViewModel not available")
         except Exception as e:
             self.variableSent.emit(name, False, f"Error updating {name}: {str(e)}")
 
