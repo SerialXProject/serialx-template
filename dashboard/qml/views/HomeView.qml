@@ -31,32 +31,28 @@ Page {
 
     Connections {
         target: homeViewModel
+
         function onExportStarted() {
             exportState.exporting = true;
         }
+
         function onExportFinished(success, message) {
             exportState.exporting = false;
             console.log(message);
         }
+
         function onImportStarted() {
             importState.importing = true;
         }
+
         function onImportFinished(success, message) {
             importState.importing = false;
             console.log(message);
         }
-        function onSerialConnectionStarted() {
-            serialState.connecting = true;
-            console.log("Serial connection started...");
-        }
-        function onSerialConnectionFinished(success, message) {
-            serialState.connecting = false;
-            console.log("Serial connection finished: " + message);
-            if (success) {
-                console.log("Variables loaded from serial connection");
-            } else {
-                console.log("Connection error: " + message);
-            }
+
+        function onConnectionModeSelected(mode) {
+            // "mode" potrebbe essere "serialx" o "python"
+            appWindow.stack.push(Qt.resolvedUrl("LoadingView.qml"));
         }
     }
 
@@ -64,6 +60,14 @@ Page {
         id: connectionMenu
 
         homeViewModel: homeViewModel
+
+        onSerialXSelected: {
+            homeViewModel.selectSerialXConnection();
+        }
+
+        onPythonSelected: {
+            homeViewModel.selectPythonConnection();
+        }
     }
 
     Rectangle {
@@ -115,7 +119,6 @@ Page {
                                 contentState.activeMode = contentState.activeMode === "var_edit" ? "" : "var_edit";
                             }
                         }
-
                     }
 
                     Text {
@@ -131,7 +134,6 @@ Page {
                                 appWindow.stack.push(Qt.resolvedUrl("SettingsView.qml"));
                             }
                         }
-
                     }
 
                     Text {
@@ -147,13 +149,9 @@ Page {
                                 homeViewModel.openHelp();
                             }
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         // Title Area
@@ -177,7 +175,6 @@ Page {
                     color: appWindow.colorOnSurfaceVariant
                     font.family: appWindow.interFont.name
                 }
-
             }
 
             Item {
@@ -202,9 +199,7 @@ Page {
                     value: homeViewModel.date
                     isTime: false
                 }
-
             }
-
         }
 
         // --- Main Content ---
@@ -237,13 +232,9 @@ Page {
                             Layout.fillHeight: true
                             source: contentState.activeMode === "var_edit" ? Qt.resolvedUrl("VarEditView.qml") : Qt.resolvedUrl("CustomView.qml")
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         // --- Footer ---
@@ -289,9 +280,7 @@ Page {
                                     position: 1
                                     color: appWindow.colorPrimaryContainer
                                 }
-
                             }
-
                         }
 
                         contentItem: Text {
@@ -303,7 +292,6 @@ Page {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
-
                     }
 
                     // EXPORT BUTTON
@@ -331,9 +319,7 @@ Page {
                                     position: 1
                                     color: appWindow.colorPrimaryContainer
                                 }
-
                             }
-
                         }
 
                         contentItem: Text {
@@ -345,9 +331,7 @@ Page {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
-
                     }
-
                 }
 
                 Item {
@@ -416,9 +400,7 @@ Page {
                                     color: highlighted ? appWindow.colorOnPrimaryContainer : appWindow.colorOnSurface
                                     font.family: appWindow.monoFont.name
                                 }
-
                             }
-
                         }
 
                         Rectangle {
@@ -477,9 +459,7 @@ Page {
                                     color: highlighted ? appWindow.colorOnSurface : appWindow.colorOnSurface
                                     font.family: appWindow.monoFont.name
                                 }
-
                             }
-
                         }
 
                         TextField {
@@ -501,9 +481,7 @@ Page {
                                 regularExpression: /^(\d{1,3}\.){0,3}\d{0,3}$/
                             }
                         }
-
                     }
-
                 }
 
                 Row {
@@ -518,9 +496,9 @@ Page {
                             if (contentState.activeMode === "var_edit") {
                                 // In var_edit mode: direct serial connection without navigating to LoadingView
                                 let port = portCombo.currentText;
-                                let baudrate = portCombo.currentText === "NET(TCP)" ? "Net/Tcp" : baudCombo.currentText;
+                                let baudrate = portCombo.currentText === "Net/Tcp" ? "Net/Tcp" : baudCombo.currentText;
                                 let ipAddress = ipField.text;
-                                homeViewModel.connectSerialAndLoadVariables(port, baudrate, ipAddress);
+                                varEditViewModel.connectSerialAndLoadVariables(port, baudrate, ipAddress);
                             } else {
                                 // Normal mode: show connection menu
                                 connectionMenu.open();
@@ -541,9 +519,7 @@ Page {
                                     position: 1
                                     color: appWindow.colorPrimaryContainer
                                 }
-
                             }
-
                         }
 
                         contentItem: Text {
@@ -555,15 +531,9 @@ Page {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
-
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

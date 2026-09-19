@@ -14,6 +14,20 @@ RowLayout {
         function onFunctionRun(name, success, message) {
             console.log(message);
         }
+        function onSerialConnectionStarted() {
+            serialState.connecting = true;
+            console.log("Serial connection started...");
+        }
+
+        function onSerialConnectionFinished(success, message) {
+            serialState.connecting = false;
+            console.log("Serial connection finished: " + message);
+            if (success) {
+                console.log("Variables loaded from serial connection");
+            } else {
+                console.log("Connection error: " + message);
+            }
+        }
     }
 
     Component.onCompleted: {
@@ -130,7 +144,7 @@ RowLayout {
                         Layout.preferredHeight: 30
                         enabled: modelData.can_set
                         onClicked: {
-                            varEditViewModel.sendVariable(modelData.type, modelData.name, valueField.text);
+                            varEditViewModel.setVariable(modelData.type, modelData.name, valueField.text);
                         }
 
                         background: Rectangle {

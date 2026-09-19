@@ -4,7 +4,12 @@ import QtQuick.Layouts
 
 Popup {
     id: connectionMenuPopup
-    property var homeViewModel // Passa il viewmodel per accedere alle sue funzioni se necessario
+    property var homeViewModel
+
+    // Segnali che notificano la scelta dell'utente, senza contenere logica
+    signal serialXSelected()
+    signal pythonSelected()
+
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -55,10 +60,8 @@ Popup {
                 color: parent.pressed ? "#1d4ed8" : "#60a5fa"
             }
             onClicked: {
-                console.log("Connessione SerialX (Nativa) selezionata");
-                // Qui potresti aggiungere la logica per la connessione SerialX
                 connectionMenuPopup.close();
-                appWindow.stack.push(Qt.resolvedUrl("../views/LoadingView.qml"));
+                connectionMenuPopup.serialXSelected();
             }
         }
 
@@ -80,10 +83,8 @@ Popup {
                 color: parent.pressed ? "#1d4ed8" : "#60a5fa"
             }
             onClicked: {
-                console.log("Connessione Python (Consigliata) selezionata");
-                // Qui potresti aggiungere la logica per la connessione Python
                 connectionMenuPopup.close();
-                appWindow.stack.push(Qt.resolvedUrl("../views/LoadingView.qml"));
+                connectionMenuPopup.pythonSelected();
             }
         }
     }

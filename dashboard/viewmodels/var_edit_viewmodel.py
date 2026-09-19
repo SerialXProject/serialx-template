@@ -1,14 +1,17 @@
 from PySide6.QtCore import QObject, Property, Signal, Slot
-
+from pySerialX.serialx_python_integration import SerialX
+from pySerialX.serialx_jit_interpreter import SerialXInterpreter
 
 class VarEditViewModel(QObject):
 
     variablesChanged = Signal()
     functionsChanged = Signal()
+    serialConnectionStarted = Signal()
+    serialConnectionFinished = Signal(bool, str)  # (success, message)
     variableSent = Signal(str, bool, str)   # (name, success, message)
     functionRun = Signal(str, bool, str)    # (name, success, message)
 
-    def __init__(self, home_viewmodel=None):
+    def __init__(self):
         super().__init__()
 
         # Ogni variabile: {"name": str, "type": str, "value": str}
@@ -16,9 +19,6 @@ class VarEditViewModel(QObject):
 
         # Ogni funzione: {"name": str}
         self._functions = []
-        
-        # Riferimento al viewmodel home per eseguire funzioni
-        self._home_viewmodel = home_viewmodel
 
     # --- variabili ---
 
@@ -38,17 +38,12 @@ class VarEditViewModel(QObject):
 
     @Slot()
     def loadVariables(self):
-        # TODO: sostituire con lettura reale (es. query al device via seriale)
         # Esempio placeholder:
         self._variables = [
-            {"name": "TEMP_THRESHOLD", "type": "float", "value": "25.5"},
-            {"name": "LED_MODE", "type": "int", "value": "1"},
-            {"name": "DEVICE_NAME", "type": "string", "value": "Arduino_01"},
+            {"name": "ESEMPIO", "type": "int", "value": "0"},
         ]
         self._functions = [
-            {"name": "RESET_DEVICE"},
-            {"name": "CALIBRATE_SENSOR"},
-            {"name": "SAVE_CONFIG"},
+            {"name": "TEST"},
         ]
         self.variablesChanged.emit()
         self.functionsChanged.emit()
@@ -67,19 +62,79 @@ class VarEditViewModel(QObject):
         self.variablesChanged.emit()
         self.functionsChanged.emit()
 
-    # --- azioni ---
-
     @Slot(str, str, str)
-    def sendVariable(self, type, name, value):
+    def connectSerialAndLoadVariables(self, port, baudrate, ip_address=""):
+        """
+        Connette serialmente e carica le variabili direttamente nel VarEditViewModel
+        senza navigare a LoadingView.
+        
+        Args:
+            port: porta seriale (es. "COM3" o "Net/Tcp")
+            baudrate: baud rate (es. "115200" o "Net/Tcp")
+            ip_address: indirizzo IP (solo per Net/Tcp)
+        """
+        self.serialConnectionStarted.emit()
+        
         try:
-            print(f"Sending {name} = {value}")
-            if self._home_viewmodel:
-                result = self._home_viewmodel.setVariable(type, name, value)
-                self.variableSent.emit(name, True, f"{name} updated to {value}")
-            else:
-                raise RuntimeError("HomeViewModel not available")
+            # Connessione seriale standard
+            communication = SerialX(port, baudrate)
+            self._communication = communication  # Salva la connessione per uso successivo
+
+            print(f"Connected to {port} at {baudrate} baud")
+
+            communication.auth("secure")
+            communication.communication.communication.send_line("help")
+            result = SerialXInterpreter.decode_help(communication.communication._read_all_lines())
+
+            print(result)
+            
+            # Trasformare i dati nel formato atteso dal VarEditViewModel
+            variables_for_viewmodel = []
+            for var in result['variables']:
+                variables_for_viewmodel.append({
+                    "name": var['name'],
+                    "type": var['type'],
+                    "value":  communication.get(var['type'], var['name'], var['is_virtual']),
+                    "can_set": var['can_set']
+                })
+            
+            functions_for_viewmodel = []
+            for func_name in result['functions']:
+                functions_for_viewmodel.append({"name": func_name})
+
+            # Caricamenti i dati nel viewmodel delle variabili
+            self.loadVariablesFromSerial(variables_for_viewmodel, functions_for_viewmodel)
+            
+            self.serialConnectionFinished.emit(True, f"Connected to {port} at {baudrate} baud")
+                
         except Exception as e:
+            self._communication = None  # Reset della connessione in caso di errore
+            self.serialConnectionFinished.emit(False, f"Serial connection error: {str(e)}")
+
+    # --- azioni ---
+    @Slot(str, str, str)
+    def setVariable(self, type, name, value):
+        """
+        Modifica una variabile sul device Arduino.
+        
+        Args:
+            tipo: tipo di dato della variabile (es. "int", "float", "bool", "string")
+            name: nome della variabile
+            value: nuovo valore della variabile
+        """
+        try:
+            if not self._communication:
+                raise RuntimeError("No active serial connection")
+            
+            print(f"Change value: {name} di type {type} a {value}")
+            result = self._communication.set(type, name, value)
+            print(f"Function result: {result}")
+            self.variableSent.emit(name, True, f"{name} updated to {value}")
+            return result
+        except Exception as e:
+            print(f"Error during change value {name}: {str(e)}")
             self.variableSent.emit(name, False, f"Error updating {name}: {str(e)}")
+            raise
 
     @Slot(str)
     def runFunction(self, name):
@@ -90,13 +145,15 @@ class VarEditViewModel(QObject):
             name: nome della funzione da eseguire
         """
         try:
-            print(f"Running function {name}")
+            if not self._communication:
+                raise RuntimeError("No active serial connection")
             
-            if self._home_viewmodel:
-                result = self._home_viewmodel.runFunction(name)
-                self.functionRun.emit(name, True, f"{name} executed successfully")
-            else:
-                raise RuntimeError("HomeViewModel not available")
-                
+            print(f"Running function: {name}")
+            result = self._communication.run(name)
+            print(f"Function result: {result}")
+            self.functionRun.emit(name, True, f"{name} executed successfully")
+            return result
         except Exception as e:
+            print(f"Error running function {name}: {str(e)}")
             self.functionRun.emit(name, False, f"Error running {name}: {str(e)}")
+            raise
