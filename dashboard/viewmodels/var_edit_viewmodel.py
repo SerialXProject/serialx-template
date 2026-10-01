@@ -4,61 +4,31 @@ from pySerialX.serialx_jit_interpreter import SerialXInterpreter
 
 class VarEditViewModel(QObject):
 
+    # Dynamic list
     variablesChanged = Signal()
     functionsChanged = Signal()
     serialConnectionStarted = Signal()
-    serialConnectionFinished = Signal(bool, str)  # (success, message)
+    serialConnectionFinished = Signal(bool, str)
     variableSent = Signal(str, bool, str)   # (name, success, message)
     functionRun = Signal(str, bool, str)    # (name, success, message)
 
     def __init__(self):
         super().__init__()
-
-        # Ogni variabile: {"name": str, "type": str, "value": str}
-        self._variables = []
-
-        # Ogni funzione: {"name": str}
-        self._functions = []
-
-    # --- variabili ---
+        self._variables = [] # {"name": str, "type": str, "value": str, "can_set": bool}
+        self._functions = [] # {"name": str}
 
     def get_variables(self):
         return self._variables
-
     variables = Property("QVariantList", get_variables, notify=variablesChanged)
-
-    # --- funzioni ---
 
     def get_functions(self):
         return self._functions
-
     functions = Property("QVariantList", get_functions, notify=functionsChanged)
 
-    # --- caricamento dinamico ---
-
-    @Slot()
-    def loadVariables(self):
-        # Esempio placeholder:
-        self._variables = [
-            {"name": "ESEMPIO", "type": "int", "value": "0"},
-        ]
-        self._functions = [
-            {"name": "TEST"},
-        ]
-        self.variablesChanged.emit()
-        self.functionsChanged.emit()
-
     @Slot(list, list)
-    def loadVariablesFromSerial(self, variables_data, functions_data):
-        """
-        Carica le variabili e funzioni da una connessione seriale.
-        
-        Args:
-            variables_data: lista di dict con chiavi "name", "type", "value"
-            functions_data: lista di dict con chiave "name"
-        """
-        self._variables = variables_data
-        self._functions = functions_data
+    def loadVariables(self, variables, functions):
+        self._variables = variables
+        self._functions = functions
         self.variablesChanged.emit()
         self.functionsChanged.emit()
 
@@ -78,32 +48,28 @@ class VarEditViewModel(QObject):
         try:
             # Connessione seriale standard
             communication = SerialX(port, baudrate)
-            self._communication = communication  # Salva la connessione per uso successivo
+            self._communication = communication
 
             print(f"Connected to {port} at {baudrate} baud")
 
             communication.auth("secure")
             communication.communication.communication.send_line("help")
             result = SerialXInterpreter.decode_help(communication.communication._read_all_lines())
-
-            print(result)
             
-            # Trasformare i dati nel formato atteso dal VarEditViewModel
-            variables_for_viewmodel = []
+            variables_data = []
             for var in result['variables']:
-                variables_for_viewmodel.append({
+                variables_data.append({
                     "name": var['name'],
                     "type": var['type'],
                     "value":  communication.get(var['type'], var['name'], var['is_virtual']),
                     "can_set": var['can_set']
                 })
             
-            functions_for_viewmodel = []
+            functions_data = []
             for func_name in result['functions']:
-                functions_for_viewmodel.append({"name": func_name})
+                functions_data.append({"name": func_name})
 
-            # Caricamenti i dati nel viewmodel delle variabili
-            self.loadVariablesFromSerial(variables_for_viewmodel, functions_for_viewmodel)
+            self.loadVariables(variables_data, functions_data)
             
             self.serialConnectionFinished.emit(True, f"Connected to {port} at {baudrate} baud")
                 

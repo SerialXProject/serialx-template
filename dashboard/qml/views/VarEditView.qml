@@ -6,8 +6,14 @@ RowLayout {
     id: root
     spacing: 30
 
+    // Stato connessione seriale (prima non era dichiarato in questo file)
+    QtObject {
+        id: serialState
+        property bool connecting: false
+    }
+
     Connections {
-        target: varEditViewModel
+        target: varEditViewModel || null
         function onVariableSent(name, success, message) {
             console.log(message);
         }
@@ -28,10 +34,6 @@ RowLayout {
                 console.log("Connection error: " + message);
             }
         }
-    }
-
-    Component.onCompleted: {
-        varEditViewModel.loadVariables();
     }
 
     // ============ COLONNA 1 — VARIABLES ============
@@ -83,86 +85,102 @@ RowLayout {
 
         Rectangle {
             Layout.fillWidth: true
-            height: 1
+            Layout.preferredHeight: 1
             color: appWindow.colorOutline
         }
 
-        ListView {
+        // Contenitore: lista + messaggio centrato (fratelli, non padre/figlio)
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            clip: true
-            spacing: 8
-            model: varEditViewModel.variables
 
-            delegate: Rectangle {
-                width: ListView.view.width
-                height: 44
-                radius: 8
-                color: appWindow.colorSurface
+            ListView {
+                id: variablesList
+                anchors.fill: parent
+                clip: true
+                spacing: 8
+                model: varEditViewModel ? varEditViewModel.variables : []
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 8
-                    spacing: 10
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: 44
+                    radius: 8
+                    color: appWindow.colorSurface
 
-                    Text {
-                        text: modelData.name
-                        Layout.preferredWidth: 140
-                        font.pixelSize: 12
-                        color: appWindow.colorOnSurface
-                        font.family: appWindow.monoFont.name
-                        elide: Text.ElideRight
-                    }
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        spacing: 10
 
-                    Text {
-                        text: modelData.type
-                        Layout.preferredWidth: 60
-                        font.pixelSize: 11
-                        color: appWindow.colorOnSurfaceVariant
-                        font.family: appWindow.monoFont.name
-                    }
-
-                    TextField {
-                        id: valueField
-                        Layout.fillWidth: true
-                        text: modelData.value
-                        color: appWindow.colorOnSurface
-                        font.pixelSize: 12
-                        font.family: appWindow.monoFont.name
-                        selectByMouse: true
-
-                        background: Rectangle {
-                            radius: 6
-                            color: appWindow.colorSurfaceHigh
-                            border.color: appWindow.colorOutline
-                            border.width: 1
-                        }
-                    }
-
-                    Button {
-                        Layout.preferredWidth: 70
-                        Layout.preferredHeight: 30
-                        enabled: modelData.can_set
-                        onClicked: {
-                            varEditViewModel.setVariable(modelData.type, modelData.name, valueField.text);
+                        Text {
+                            text: modelData.name
+                            Layout.preferredWidth: 140
+                            font.pixelSize: 12
+                            color: appWindow.colorOnSurface
+                            font.family: appWindow.monoFont.name
+                            elide: Text.ElideRight
                         }
 
-                        background: Rectangle {
-                            radius: 6
-                            color: parent.enabled ? appWindow.colorPrimary : appWindow.colorOutline
+                        Text {
+                            text: modelData.type
+                            Layout.preferredWidth: 60
+                            font.pixelSize: 11
+                            color: appWindow.colorOnSurfaceVariant
+                            font.family: appWindow.monoFont.name
                         }
 
-                        contentItem: Text {
-                            text: "INVIA"
-                            font.pixelSize: 10
-                            font.bold: true
-                            color: "white"
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
+                        TextField {
+                            id: valueField
+                            Layout.fillWidth: true
+                            text: modelData.value
+                            color: appWindow.colorOnSurface
+                            font.pixelSize: 12
+                            font.family: appWindow.monoFont.name
+                            selectByMouse: true
+
+                            background: Rectangle {
+                                radius: 6
+                                color: appWindow.colorSurfaceHigh
+                                border.color: appWindow.colorOutline
+                                border.width: 1
+                            }
+                        }
+
+                        Button {
+                            Layout.preferredWidth: 70
+                            Layout.preferredHeight: 30
+                            enabled: varEditViewModel !== null && modelData.can_set
+                            onClicked: {
+                                if (varEditViewModel) {
+                                    varEditViewModel.setVariable(modelData.type, modelData.name, valueField.text);
+                                }
+                            }
+
+                            background: Rectangle {
+                                radius: 6
+                                color: parent.enabled ? appWindow.colorPrimary : appWindow.colorOutline
+                            }
+
+                            contentItem: Text {
+                                text: "INVIA"
+                                font.pixelSize: 10
+                                font.bold: true
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
                         }
                     }
-
                 }
+            }
+
+            Text {
+                anchors.centerIn: parent
+                visible: variablesList.count === 0
+                text: serialState.connecting ? "Connessione in corso..." : "Connetti un dispositivo"
+                font.pixelSize: 14
+                color: appWindow.colorOnSurfaceVariant
+                font.family: appWindow.monoFont.name
             }
         }
     }
@@ -170,7 +188,7 @@ RowLayout {
     // Divisore verticale
     Rectangle {
         Layout.fillHeight: true
-        width: 1
+        Layout.preferredWidth: 1
         color: appWindow.colorOutline
     }
 
@@ -208,60 +226,75 @@ RowLayout {
 
         Rectangle {
             Layout.fillWidth: true
-            height: 1
+            Layout.preferredHeight: 1
             color: appWindow.colorOutline
         }
 
-        ListView {
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            clip: true
-            spacing: 8
-            model: varEditViewModel.functions
 
-            delegate: Rectangle {
-                width: ListView.view.width
-                height: 44
-                radius: 8
-                color: appWindow.colorSurface
+            ListView {
+                id: functionsList
+                anchors.fill: parent
+                clip: true
+                spacing: 8
+                model: varEditViewModel ? varEditViewModel.functions : []
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 8
-                    spacing: 10
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: 44
+                    radius: 8
+                    color: appWindow.colorSurface
 
-                    Text {
-                        text: modelData.name
-                        Layout.fillWidth: true
-                        font.pixelSize: 12
-                        color: appWindow.colorOnSurface
-                        font.family: appWindow.monoFont.name
-                        elide: Text.ElideRight
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        spacing: 10
+
+                        Text {
+                            text: modelData.name
+                            Layout.fillWidth: true
+                            font.pixelSize: 12
+                            color: appWindow.colorOnSurface
+                            font.family: appWindow.monoFont.name
+                            elide: Text.ElideRight
+                        }
+
+                        Button {
+                            Layout.preferredWidth: 70
+                            Layout.preferredHeight: 30
+                            onClicked: {
+                                if (varEditViewModel) {
+                                    varEditViewModel.runFunction(modelData.name);
+                                }
+                            }
+
+                            background: Rectangle {
+                                radius: 6
+                                color: appWindow.colorPrimary
+                            }
+
+                            contentItem: Text {
+                                text: "RUN"
+                                font.pixelSize: 10
+                                font.bold: true
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                        }
                     }
-
-                    Button {
-                        Layout.preferredWidth: 70
-                        Layout.preferredHeight: 30
-                        onClicked: {
-                            varEditViewModel.runFunction(modelData.name);
-                        }
-
-                        background: Rectangle {
-                            radius: 6
-                            color: appWindow.colorPrimary
-                        }
-
-                        contentItem: Text {
-                            text: "RUN"
-                            font.pixelSize: 10
-                            font.bold: true
-                            color: "white"
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
-                    }
-
                 }
+            }
+
+            Text {
+                anchors.centerIn: parent
+                visible: functionsList.count === 0
+                text: serialState.connecting ? "Connessione in corso..." : "Connetti un dispositivo"
+                font.pixelSize: 14
+                color: appWindow.colorOnSurfaceVariant
+                font.family: appWindow.monoFont.name
             }
         }
     }
