@@ -133,10 +133,17 @@ RowLayout {
                             id: valueField
                             Layout.fillWidth: true
                             text: modelData.value
-                            color: appWindow.colorOnSurface
+                            property bool importedValue: modelData.imported === true
+                            color: importedValue ? (appWindow.isDark ? "#81c784" : "#187a36") : appWindow.colorOnSurface
                             font.pixelSize: 12
                             font.family: appWindow.monoFont.name
                             selectByMouse: true
+                            onTextEdited: {
+                                importedValue = false;
+                                if (varEditViewModel) {
+                                    varEditViewModel.updateVariableValue(index, text);
+                                }
+                            }
 
                             background: Rectangle {
                                 radius: 6

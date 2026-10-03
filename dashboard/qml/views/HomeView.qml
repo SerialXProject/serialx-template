@@ -263,7 +263,11 @@ Page {
                         height: 50
                         enabled: !importState.importing
                         onClicked: {
-                            homeViewModel.importData();
+                            if (contentState.activeMode === "var_edit") {
+                                varEditViewModel.importData();
+                            } else {
+                                homeViewModel.importData();
+                            }
                         }
 
                         background: Rectangle {
@@ -302,7 +306,11 @@ Page {
                         height: 50
                         enabled: !exportState.exporting
                         onClicked: {
-                            homeViewModel.exportData();
+                            if (contentState.activeMode === "var_edit") {
+                                varEditViewModel.exportData();
+                            } else {
+                                homeViewModel.exportData();
+                            }
                         }
 
                         background: Rectangle {
@@ -498,7 +506,7 @@ Page {
                                 let port = portCombo.currentText;
                                 let baudrate = portCombo.currentText === "Net/Tcp" ? "Net/Tcp" : baudCombo.currentText;
                                 let ipAddress = ipField.text;
-                                varEditViewModel.connectSerialAndLoadVariables(port, baudrate, ipAddress);
+                                varEditViewModel.connectDevice(port, baudrate, ipAddress);
                             } else {
                                 // Normal mode: show connection menu
                                 connectionMenu.open();
