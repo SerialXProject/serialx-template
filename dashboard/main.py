@@ -8,6 +8,7 @@ from viewmodels.home_viewmodel import HomeViewModel
 from viewmodels.settings_viewmodel import SettingsViewModel
 from viewmodels.loading_viewmodel import LoadingViewModel
 from viewmodels.var_edit_viewmodel import VarEditViewModel
+from viewmodels.custom_viewmodel import CustomViewModel
 
 def main():
     app = QApplication(sys.argv)
@@ -18,11 +19,13 @@ def main():
     settings_vm = SettingsViewModel()
     loading_vm = LoadingViewModel()
     var_edit_vm = VarEditViewModel()
+    custom_vm = CustomViewModel()
 
     engine.rootContext().setContextProperty("homeViewModel", home_vm)
     engine.rootContext().setContextProperty("settingsViewModel", settings_vm)
     engine.rootContext().setContextProperty("loadingViewModel", loading_vm)
     engine.rootContext().setContextProperty("varEditViewModel", var_edit_vm)
+    engine.rootContext().setContextProperty("customViewModel", custom_vm)
 
     qml_file = Path(__file__).resolve().parent / "qml" / "main.qml"
 
