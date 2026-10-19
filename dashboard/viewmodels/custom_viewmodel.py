@@ -1,5 +1,7 @@
-from PySide6.QtCore import QObject, Property, Signal, Slot
+import csv
 
+from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtWidgets import QFileDialog
 
 class CustomViewModel(QObject):
 
@@ -29,7 +31,6 @@ class CustomViewModel(QObject):
             str: Il percorso completo del file salvato
         """
         from datetime import datetime
-        from pathlib import Path
         
         # Crea la cartella scripts se non esiste
         scripts_dir = self._ensure_scripts_directory()
@@ -126,3 +127,33 @@ class CustomViewModel(QObject):
             error_msg = f"Connection error: {str(e)}"
             print(f"✗ {error_msg}")
             self.connectionStarted.emit(error_msg)
+
+    @Slot()
+    def exportData(self):
+        self.exportStarted.emit()
+        try:
+            file_path, _ = QFileDialog.getSaveFileName(None, "Export data", "export.csv", "CSV Files (*.csv)")
+            if not file_path:
+                self.exportFinished.emit(False, "Export cancelled")
+                return
+            with open(file_path, "w", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow(["Field1", "Field2", "Field3"])
+                writer.writerow(["value1", "value2", "value3"])
+            self.exportFinished.emit(True, f"Exported to {file_path}")
+        except Exception as e:
+            self.exportFinished.emit(False, f"Export error: {str(e)}")
+
+    @Slot()
+    def importData(self):
+        self.importStarted.emit()
+        try:
+            file_path, _ = QFileDialog.getOpenFileName(None, "Import data", "", "CSV Files (*.csv)")
+            if not file_path:
+                self.importFinished.emit(False, "Import cancelled")
+                return
+            with open(file_path, "r", newline="", encoding="utf-8") as f:
+                rows = list(csv.reader(f))
+            self.importFinished.emit(True, f"Imported {len(rows)} rows from {file_path}")
+        except Exception as e:
+            self.importFinished.emit(False, f"Import error: {str(e)}")

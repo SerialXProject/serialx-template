@@ -10,6 +10,8 @@ from viewmodels.loading_viewmodel import LoadingViewModel
 from viewmodels.var_edit_viewmodel import VarEditViewModel
 from viewmodels.custom_viewmodel import CustomViewModel
 
+template_version = "1.0.0" 
+
 def main():
     app = QApplication(sys.argv)
 

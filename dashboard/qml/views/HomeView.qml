@@ -60,6 +60,7 @@ Page {
         id: connectionMenu
 
         homeViewModel: homeViewModel
+        customViewModel: customViewModel
 
         onSerialXSelected: {
             homeViewModel.selectSerialXConnection();
@@ -309,7 +310,7 @@ Page {
                             if (contentState.activeMode === "var_edit") {
                                 varEditViewModel.exportData();
                             } else {
-                                homeViewModel.exportData();
+                                customViewModel.exportData();
                             }
                         }
 

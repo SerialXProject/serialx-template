@@ -5,6 +5,7 @@ import QtQuick.Layouts
 Popup {
     id: connectionMenuPopup
     property var homeViewModel
+    property var customViewModel
 
     // Segnali che notificano la scelta dell'utente, senza contenere logica
     signal serialXSelected()
@@ -22,6 +23,27 @@ Popup {
     background: Rectangle {
         color: appWindow.colorSurfaceLow
         radius: 8
+    }
+
+    // Connetti ai signals del CustomViewModel
+    Connections {
+        target: customViewModel
+        function onScriptGenerated(script, success, message, file_path) {
+            console.log("Script generated event:")
+            console.log("  Success:", success)
+            console.log("  Message:", message)
+            console.log("  File path:", file_path)
+            
+            if (success) {
+                console.log("✓ Script saved to:", file_path)
+            } else {
+                console.error("✗ Script generation failed:", message)
+            }
+        }
+        
+        function onConnectionStarted(message) {
+            console.log("Connection started:", message)
+        }
     }
 
     ColumnLayout {

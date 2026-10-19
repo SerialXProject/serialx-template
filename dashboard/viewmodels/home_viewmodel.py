@@ -1,5 +1,5 @@
 from pathlib import Path
-import csv
+import helpers.script_generator as script_generator
 import webbrowser
 
 from PySide6.QtCore import QObject, Property, Signal, Slot, QTimer, QDateTime
@@ -71,45 +71,23 @@ class HomeViewModel(QObject):
         webbrowser.open(f"file://{file_path}")
 
     @Slot()
-    def exportData(self):
-        self.exportStarted.emit()
-        try:
-            file_path, _ = QFileDialog.getSaveFileName(None, "Export data", "export.csv", "CSV Files (*.csv)")
-            if not file_path:
-                self.exportFinished.emit(False, "Export cancelled")
-                return
-            with open(file_path, "w", newline="", encoding="utf-8") as f:
-                writer = csv.writer(f)
-                writer.writerow(["Field1", "Field2", "Field3"])
-                writer.writerow(["value1", "value2", "value3"])
-            self.exportFinished.emit(True, f"Exported to {file_path}")
-        except Exception as e:
-            self.exportFinished.emit(False, f"Export error: {str(e)}")
-
-    @Slot()
-    def importData(self):
-        self.importStarted.emit()
-        try:
-            file_path, _ = QFileDialog.getOpenFileName(None, "Import data", "", "CSV Files (*.csv)")
-            if not file_path:
-                self.importFinished.emit(False, "Import cancelled")
-                return
-            with open(file_path, "r", newline="", encoding="utf-8") as f:
-                rows = list(csv.reader(f))
-            self.importFinished.emit(True, f"Imported {len(rows)} rows from {file_path}")
-        except Exception as e:
-            self.importFinished.emit(False, f"Import error: {str(e)}")
-
-    @Slot()
     def selectSerialXConnection(self):
         print("Connessione SerialX (Nativa) selezionata")
-        # logica di preparazione connessione seriale nativa
         self.connectionMode = "serialx"
         self.connectionModeSelected.emit("serialx")
+        script = script_generator.generate_serialx_script(None)  # Placeholder for actual data
+        if script is not None:
+            print("✓ SerialX script generated successfully!")
+        else:
+            print("✗ Failed to generate SerialX script.")
 
     @Slot()
     def selectPythonConnection(self):
         print("Connessione Python (Consigliata) selezionata")
-        # logica di preparazione connessione via python
         self.connectionMode = "python"
         self.connectionModeSelected.emit("python")
+        script = script_generator.generate_python_script(None)  # Placeholder for actual data
+        if script is not None:
+            print("✓ Python script generated successfully!")
+        else:
+            print("✗ Failed to generate Python script.")

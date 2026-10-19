@@ -3,7 +3,7 @@ from typing import Tuple
 from pySerialX.models.serialx_data import SerialXData
 from pySerialX.version import __version__, __app_name__, __author__, __language__
 
-def generate_script(data: SerialXData) -> str:
+def generate_python_script(data: SerialXData) -> str:
     try:
         if data is None:
             return None
@@ -61,6 +61,9 @@ def generate_script(data: SerialXData) -> str:
     except Exception as e:
         print(f"Error generating script: {e}")
         return None
+
+def generate_serialx_script(data: SerialXData) -> str:
+    pass
     
 def importScript(script: str) -> SerialXData:
     pass

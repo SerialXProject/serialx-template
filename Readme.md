@@ -41,3 +41,24 @@ pwsh run_ui.ps1
 
 * **Arduino IDE:** Necessario per la compilazione e il caricamento del firmware.
 * **Python 3.14:** Richiesto per l'esecuzione degli script di comunicazione runtime generati dal client. 
+
+---
+
+## Aggiornamenti della dashboard
+
+**Per una migliore gestione degli aggiornamenti puoi modificare solo i seguenti files:**
+- contenuto della cartella helpers (mantieni la stessa interfaccia delle funzioni e classi)
+- Components (aggiungene solo se ne li usi nella customView)
+- qml/views/CustomView.qml
+- viewmodels/custom_viewmodel.py
+
+Procedura di aggiornamento
+
+- Prima di procedere all'aggiornamento di una dashboard al nuovo template crea una copia di backup.
+- Successivamente elimina tutto il contenuto della dashboard ad eccezione:
+    - contenuto della cartella helpers
+    - Components (solo se hai fatto modifiche)
+    - qml/views/CustomView.qml
+    - viewmodels/custom_viewmodel.py
+- Copia i file del nuovo template nella deshboard
+- Verifica che i file citati prima (che non hai eliminato) abbiamo tenuto la stessa interfaccia in modo che continiuno a comunicare con il resto del programma
