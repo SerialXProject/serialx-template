@@ -1,3 +1,5 @@
+# TODO: Aggiungere la richiesta di metadati per la creazione del progetto ad hoc
+
 # Parametri del repository
 $repoUrl = "https://github.com/SerialXProject/serialx-template/"
 $branch = "main"

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Tuple
 from pySerialX.models.serialx_data import SerialXData
-from pySerialX.version import __version__, __app_name__, __author__, __language__
+from pySerialX.version import __version__, __app_name__, __author__
 
 def generate_python_script(data: SerialXData) -> str:
     try:
@@ -12,7 +12,7 @@ def generate_python_script(data: SerialXData) -> str:
         lines = []
 
         # App info
-        lines.append(f"#!{__language__.lower()}")
+        lines.append(f"#! SerialX")
         lines.append("")
         lines.append(f"@{__app_name__}")
         lines.append(f"@v{__version__}")

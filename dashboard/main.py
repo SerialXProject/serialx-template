@@ -4,6 +4,7 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
+from app import __appName__, __appVersion__, __appDescription__, __appAuthor__
 from viewmodels.home_viewmodel import HomeViewModel
 from viewmodels.settings_viewmodel import SettingsViewModel
 from viewmodels.loading_viewmodel import LoadingViewModel
@@ -16,6 +17,12 @@ def main():
     app = QApplication(sys.argv)
 
     engine = QQmlApplicationEngine()
+
+    engine.rootContext().setContextProperty("appName", __appName__)
+    engine.rootContext().setContextProperty("appVersion", __appVersion__)
+    engine.rootContext().setContextProperty("appDescription", __appDescription__)
+    engine.rootContext().setContextProperty("appAuthor", __appAuthor__)
+    engine.rootContext().setContextProperty("templateVersion", template_version)
 
     home_vm = HomeViewModel()
     settings_vm = SettingsViewModel()

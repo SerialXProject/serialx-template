@@ -93,7 +93,7 @@ Page {
                 spacing: 30
 
                 Text {
-                    text: "SerialXTemplate"
+                    text: "SerialX Dashboard"
                     color: appWindow.colorPrimary
                     font.pixelSize: 20
                     font.weight: Font.Bold
@@ -162,7 +162,7 @@ Page {
 
             Column {
                 Text {
-                    text: "SerialXProject"
+                    text: appName
                     font.pixelSize: 48
                     font.weight: Font.Black
                     color: appWindow.colorOnSurface
@@ -170,7 +170,7 @@ Page {
                 }
 
                 Text {
-                    text: "Arduino SerialX - Desktop Client Template"
+                    text: appDescription
                     font.pixelSize: 12
                     font.letterSpacing: 2
                     color: appWindow.colorOnSurfaceVariant
