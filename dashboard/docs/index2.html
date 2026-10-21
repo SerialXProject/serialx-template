@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE DI DOCUMENTAZIONE
+  Questo file è una base vuota: il maintainer del progetto deve modificarlo
+  secondo le proprie esigenze.
+    1. Cerca i segnaposto tra parentesi quadre, evidenziati in giallo
+       (classe "ph"), e sostituiscili con i dati reali.
+    2. Aggiungi o rimuovi sezioni (ogni <section id="..."> ha una voce nel menu <nav>).
+    3. Elimina il blocco <aside class="tpl"> quando la pagina è definitiva.
+-->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>[Nome progetto] – Documentazione</title>
+<style>
+:root{--bg:#f2f4f7;--surface:#fff;--ink:#14202e;--muted:#566476;--line:#d6dce5;--accent:#2a56e0;--accent-soft:#e3eafc;--amber:#9a5f00;--ph:#fff1c2;--code:#101a27;--code-ink:#d8e2f0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d141d;--surface:#141d29;--ink:#e6ecf4;--muted:#93a1b4;--line:#263345;--accent:#7b9bff;--accent-soft:#1b2a4d;--amber:#f0b04a;--ph:#4a3a10;--code:#09101a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d141d;--surface:#141d29;--ink:#e6ecf4;--muted:#93a1b4;--line:#263345;--accent:#7b9bff;--accent-soft:#1b2a4d;--amber:#f0b04a;--ph:#4a3a10;--code:#09101a;color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 16px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1180px;margin:0 auto}
+nav{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;padding:32px 24px;border-right:1px solid var(--line);overflow-y:auto}
+nav .brand{font:600 20px ui-monospace,Consolas,monospace;margin:0 0 4px}
+nav .sub{color:var(--muted);font-size:13px;margin:0 0 28px}
+nav a{display:block;padding:6px 10px;margin:0 -10px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:15px}
+nav a:hover,nav a[aria-current="true"]{background:var(--accent-soft);color:var(--ink)}
+main{padding:56px 48px 96px;min-width:0}
+h1{font:600 clamp(36px,6vw,60px)/1.05 ui-monospace,Consolas,monospace;letter-spacing:-.03em;margin:0 0 20px}
+.lead{font-size:20px;max-width:56ch;color:var(--muted);margin:0 0 28px}
+.ph{background:var(--ph);border-radius:3px;padding:0 3px}
+section{margin-top:64px}
+h2.t{font-size:28px;line-height:1.2;margin:0 0 16px}
+h3{font-size:18px;margin:28px 0 8px}
+p{max-width:68ch}
+code{font:14px ui-monospace,Consolas,monospace;background:var(--accent-soft);padding:2px 6px;border-radius:4px}
+.frame{background:var(--code);color:var(--code-ink);border-radius:10px;padding:18px 20px;font:14px/1.7 ui-monospace,Consolas,monospace;overflow-x:auto;white-space:pre}
+.frame .dim{color:#7f92aa}
+.frame .ph{color:var(--ink)}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:480px;background:var(--surface);border:1px solid var(--line)}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+th{font-weight:600;background:var(--accent-soft)}
+.note-box{border-left:3px solid var(--amber);background:var(--surface);padding:4px 16px;max-width:68ch;margin:16px 0}
+ol{max-width:68ch;padding-left:22px}
+li{margin:4px 0}
+.tpl{border:1px dashed var(--amber);background:var(--surface);border-radius:10px;padding:16px 20px;margin:0 0 40px}
+.tpl strong{color:var(--amber)}
+.tpl p{margin:0 0 8px}
+.tpl ul{margin:8px 0 0;padding-left:20px;font-size:15px;color:var(--muted)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:16px}
+.links a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;text-decoration:none;color:var(--ink)}
+.links a:hover{border-color:var(--accent)}
+.links small{display:block;color:var(--muted);margin-top:2px}
+footer{margin-top:80px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+@media (max-width:860px){.layout{display:block}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:20px 20px 12px}main{padding:32px 20px 64px}.lead{font-size:18px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="Indice">
+  <p class="brand"><span class="ph">[Nome progetto]</span></p>
+  <p class="sub">Documentazione</p>
+  <a href="#panoramica">Panoramica</a>
+  <a href="#utilizzo">Utilizzo</a>
+  <a href="#architettura">Architettura</a>
+  <a href="#struttura">Struttura del progetto</a>
+  <a href="#funzionalita">Funzionalità</a>
+  <a href="#esecuzione">Installazione e avvio</a>
+  <a href="#risorse">Risorse</a>
+</nav>
+
+<main>
+<aside class="tpl" role="note">
+  <p><strong>Pagina template.</strong> Questa documentazione è una base vuota: il maintainer del progetto deve modificarla in base alle proprie esigenze.</p>
+  <ul>
+    <li>Sostituisci i segnaposto evidenziati, come <span class="ph">[Nome progetto]</span>, con i dati reali.</li>
+    <li>Aggiungi, sposta o elimina le sezioni; aggiorna di conseguenza il menu laterale.</li>
+    <li>Rimuovi questo avviso (il blocco <code>&lt;aside class="tpl"&gt;</code>) a pagina completata.</li>
+  </ul>
+</aside>
+
+<header>
+  <h1><span class="ph">[Nome progetto]</span></h1>
+  <p class="lead"><span class="ph">[Descrizione in una frase: cosa fa il progetto e per chi.]</span></p>
+</header>
+
+<section id="panoramica">
+  <h2 class="t">Panoramica</h2>
+  <p><span class="ph">[Spiega lo scopo del progetto e il problema che risolve, in 2–4 frasi.]</span></p>
+  <div class="wrap"><table>
+    <tr><th>Aspetto</th><th>Dettaglio</th></tr>
+    <tr><td>Linguaggio</td><td><span class="ph">[es. linguaggio principale]</span></td></tr>
+    <tr><td>Framework / librerie</td><td><span class="ph">[es. framework principali]</span></td></tr>
+    <tr><td>Pattern architetturale</td><td><span class="ph">[es. pattern adottato]</span></td></tr>
+    <tr><td>Persistenza dei dati</td><td><span class="ph">[es. database, file, nessuna]</span></td></tr>
+    <tr><td>Licenza</td><td><span class="ph">[nome licenza]</span></td></tr>
+  </table></div>
+</section>
+
+<section id="utilizzo">
+  <h2 class="t">Utilizzo</h2>
+
+  <h3>Cosa fa il progetto</h3>
+  <p><span class="ph">[Descrivi cosa fa il progetto che usa questo template: quali dispositivi Arduino controlla, quali dati gestisce e quali operazioni permette all’utente.]</span></p>
+
+  <h3>Menu personalizzato</h3>
+  <p>Il progetto include un menu personalizzato. <span class="ph">[Descrivi dove si trova e come si apre.]</span></p>
+  <div class="wrap"><table>
+    <tr><th>Voce di menu</th><th>Cosa fa</th></tr>
+    <tr><td><span class="ph">[Voce 1]</span></td><td><span class="ph">[Descrizione]</span></td></tr>
+    <tr><td><span class="ph">[Voce 2]</span></td><td><span class="ph">[Descrizione]</span></td></tr>
+    <tr><td><span class="ph">[Voce 3]</span></td><td><span class="ph">[Descrizione]</span></td></tr>
+  </table></div>
+
+  <h3>Connettersi ad Arduino</h3>
+  <ol>
+    <li>Collega la scheda Arduino al computer.</li>
+    <li>Scegli la <strong>porta COM</strong> corretta, quella assegnata alla tua scheda.</li>
+    <li>Imposta il <strong>baudrate</strong> corretto, uguale a quello configurato nel codice caricato su Arduino.</li>
+    <li>Premi <strong>Connetti</strong>.</li>
+  </ol>
+  <div class="note-box"><p>Se porta o baudrate non sono corretti, la connessione non si stabilisce o i dati risultano illeggibili. In quel caso ricontrolla entrambi i valori.</p></div>
+
+  <h3>Modalità di comunicazione</h3>
+  <p>Dopo aver premuto <strong>Connetti</strong>, viene chiesto quale modalità di comunicazione usare: <span class="ph">[Modalità A]</span> oppure <span class="ph">[Modalità B]</span>. Qualunque modalità tu scelga, <strong>il risultato è identico</strong>.</p>
+
+  <h3>Modalità edit</h3>
+  <p>È disponibile anche una <strong>modalità edit</strong>, che permette di modificare direttamente l’Arduino. Per usarla consulta la <a href="https://serialxproject.github.io/serialx-docs/" target="_blank" rel="noopener">documentazione ufficiale del template</a>, che è unificata per tutti i progetti.</p>
+</section>
+
+<section id="architettura">
+  <h2 class="t">Architettura</h2>
+  <p><span class="ph">[Descrivi come sono organizzati i componenti e come comunicano tra loro.]</span></p>
+  <h3><span class="ph">[Componente 1]</span></h3>
+  <p><span class="ph">[Responsabilità del componente.]</span></p>
+  <h3><span class="ph">[Componente 2]</span></h3>
+  <p><span class="ph">[Responsabilità del componente.]</span></p>
+</section>
+
+<section id="struttura">
+  <h2 class="t">Struttura del progetto</h2>
+  <p><span class="ph">[Spiega come è organizzato il repository.]</span></p>
+<div class="frame">.
+├── <span class="ph">[cartella-codice]</span>/
+│   └── <span class="ph">[file-di-ingresso]</span>   <span class="dim"># punto di ingresso</span>
+├── <span class="ph">[cartella-risorse]</span>/
+├── <span class="ph">[script-di-avvio]</span>
+└── <span class="ph">[script-di-build]</span></div>
+</section>
+
+<section id="funzionalita">
+  <h2 class="t">Funzionalità</h2>
+  <p><span class="ph">[Introduzione alle funzionalità principali.]</span></p>
+  <div class="wrap"><table>
+    <tr><th>Funzionalità</th><th>Descrizione</th></tr>
+    <tr><td><span class="ph">[Nome funzionalità 1]</span></td><td><span class="ph">[Cosa fa]</span></td></tr>
+    <tr><td><span class="ph">[Nome funzionalità 2]</span></td><td><span class="ph">[Cosa fa]</span></td></tr>
+    <tr><td><span class="ph">[Nome funzionalità 3]</span></td><td><span class="ph">[Cosa fa]</span></td></tr>
+  </table></div>
+</section>
+
+<section id="esecuzione">
+  <h2 class="t">Installazione e avvio</h2>
+  <h3>Requisiti</h3>
+  <p><span class="ph">[Versioni, dipendenze e strumenti necessari.]</span></p>
+  <h3>Avvio</h3>
+<div class="frame"><span class="dim"># avvio in sviluppo</span>
+<span class="ph">[comando di avvio]</span></div>
+  <h3>Build</h3>
+<div class="frame"><span class="dim"># creazione del pacchetto o dell’eseguibile</span>
+<span class="ph">[comando di build]</span></div>
+</section>
+
+<section id="risorse">
+  <h2 class="t">Risorse</h2>
+  <div class="links">
+    <a href="#"><span class="ph">[Titolo link 1]</span><small><span class="ph">[Breve descrizione]</span></small></a>
+    <a href="#"><span class="ph">[Titolo link 2]</span><small><span class="ph">[Breve descrizione]</span></small></a>
+    <a href="#"><span class="ph">[Titolo link 3]</span><small><span class="ph">[Breve descrizione]</span></small></a>
+  </div>
+</section>
+
+<footer>Template di documentazione da personalizzare a cura del maintainer del progetto.</footer>
+</main>
+</div>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav a[href^="#"]'));
+  var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a});
+  if(!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){links.forEach(function(a){a.removeAttribute('aria-current')});
+        var a=map[e.target.id];if(a)a.setAttribute('aria-current','true');}
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){io.observe(s)});
+})();
+</script>
+</body>
+</html>

@@ -89,14 +89,14 @@ Page {
             ColumnLayout {
                 spacing: 8
                 Text {
-                    text: "SerialX"
+                    text: "Settings"
                     color: appWindow.colorPrimary
                     font.pixelSize: 48
                     font.weight: Font.Normal
                     font.letterSpacing: -1
                 }
                 Text {
-                    text: "SerialX is a development language and tool for comunication for Arduino"
+                    text: "Customize the experience with the tool"
                     color: appWindow.colorOnSurfaceVariant
                     Layout.preferredWidth: 600
                     wrapMode: Text.WordWrap
@@ -199,7 +199,7 @@ Page {
                             Text {
                                 text: "Software Updates"
                                 color: appWindow.colorPrimary
-                                font.pixelSize: 18
+                                font.pixelSize: 28
                                 font.weight: Font.Bold
                             }
 
@@ -208,15 +208,33 @@ Page {
                             }
 
                             Text {
-                                text: "CURRENT VERSION"
+                                text: "MANTAINER VERSION"
                                 color: appWindow.colorOnSurfaceVariant
                                 font.pixelSize: 10
                                 font.letterSpacing: 1.5
                             }
                             Text {
-                                text: settingsViewModel.current_version
+                                text: "v" + appVersion
                                 color: appWindow.colorPrimary
                                 font.pixelSize: 28
+                                font.family: stack.monoFont
+                                font.weight: Font.Bold
+                            }
+
+                            Item {
+                                Layout.preferredHeight: 10
+                            }
+
+                            Text {
+                                text: "TEMPLATE VERSION"
+                                color: appWindow.colorOnSurfaceVariant
+                                font.pixelSize: 10
+                                font.letterSpacing: 1.5
+                            }
+                            Text {
+                                text: "v" + templateVersion
+                                color: appWindow.colorPrimary
+                                font.pixelSize: 20
                                 font.family: stack.monoFont
                                 font.weight: Font.Bold
                             }

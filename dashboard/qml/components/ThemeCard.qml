@@ -9,11 +9,12 @@ Rectangle {
     property color previewColor: "#000000"
     property bool active: false
     property bool isGradient: false
+    property color textColor: appWindow.colorPrimary   // era "white"
 
     signal clicked
 
     radius: 20
-    color: active ? "#2A2A2A" : "#1A1A1A"
+    color: "transparent"
     border.width: active ? 2 : 1
     border.color: active ? "#4F8CFF" : "#333333"
 
@@ -38,6 +39,9 @@ Rectangle {
 
             color: isGradient ? "transparent" : previewColor
 
+            border.width: 1
+            border.color: "#80808080"
+
             gradient: Gradient {
                 GradientStop {
                     position: 0
@@ -53,7 +57,7 @@ Rectangle {
 
         Text {
             text: root.label
-            color: "white"
+            color: root.textColor
             font.pixelSize: 16
             font.bold: active
         }

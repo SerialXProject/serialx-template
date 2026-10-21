@@ -15,7 +15,6 @@ class SettingsViewModel(QObject):
         self._settings = QSettings("SerialXProject", "SerialXTemplate")
 
         self._theme = self._settings.value("theme", "System")
-        self._current_version = "v2.4.0-stable"
         self._last_checked = self._settings.value("last_checked", "")
 
     # --- theme ---
