@@ -261,8 +261,8 @@ Page {
                                     }
                                     Text {
                                         text: settingsViewModel.last_checked !== ""
-                                              ? settingsViewModel.last_checked
-                                              : "Not checked yet."
+                                        ? settingsViewModel.last_checked
+                                        : "Not checked yet."
                                         color: appWindow.colorOnSurfaceVariant
                                         font.pixelSize: 11
                                         Layout.fillWidth: true
@@ -275,47 +275,98 @@ Page {
                                 Layout.fillHeight: true
                             }
 
+                            // Compare solo quando è disponibile un aggiornamento
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: settingsViewModel.updateAvailable ? 52 : 0
+                                visible: settingsViewModel.updateAvailable
+                                color: Qt.rgba(163 / 255, 201 / 255, 255 / 255, 0.12)
+                                radius: 8
+                                border.color: appWindow.colorPrimary
+                                border.width: 1
+
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 12
+                                    spacing: 10
+
+                                    Text {
+                                        text: "v" + settingsViewModel.latestVersion + " available"
+                                        color: appWindow.colorPrimary
+                                        font.family: stack.monoFont
+                                        font.weight: Font.Bold
+                                        font.pixelSize: 14
+                                        Layout.fillWidth: true
+                                    }
+
+                                    Button {
+                                        text: "Open page"
+                                        onClicked: settingsViewModel.openReleasePage()
+
+                                        contentItem: Text {
+                                            text: parent.text
+                                            color: appWindow.colorPrimary
+                                            font.weight: Font.Bold
+                                            font.pixelSize: 12
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                        }
+                                        background: Rectangle {
+                                            radius: 6
+                                            color: "transparent"
+                                            border.color: appWindow.colorPrimary
+                                            border.width: 1
+                                            opacity: parent.hovered ? 1.0 : 0.6
+                                        }
+                                    }
+                                }
+                            }
+
+                            Item { Layout.preferredHeight: settingsViewModel.updateAvailable ? 12 : 0 }
+
                             QtObject {
                                 id: updateState
                                 property bool checking: false
-                            }
-
-                            Connections {
-                                target: settingsViewModel
-                                function onUpdateCheckStarted() {
-                                    updateState.checking = true;
-                                }
-                                function onUpdateCheckFinished(updateAvailable, message) {
-                                    updateState.checking = false;
-                                }
-                            }
-
-                            Button {
-                                id: updateBtn
-                                Layout.fillWidth: true
-                                enabled: !updateState.checking
-
-                                onClicked: {
-                                    settingsViewModel.checkForUpdates();
                                 }
 
-                                contentItem: RowLayout {
-                                    spacing: 8
-                                    Item {
-                                        Layout.fillWidth: true
+                                Connections {
+                                    target: settingsViewModel
+                                    function onUpdateCheckStarted()
+                                    {
+                                        updateState.checking = true;
                                     }
-                                    Text {
-                                        text: updateState.checking ? "Checking..." : "Check for updates"
-                                        color: "white"
-                                        font.weight: Font.Bold
-                                        font.pixelSize: 14
+                                    function onUpdateCheckFinished(updateAvailable, message)
+                                    {
+                                        updateState.checking = false;
                                     }
-                                    Image {
-                                        source: Qt.resolvedUrl("../../assets/refresh-ccw.svg")
-                                        width: 18
-                                        height: 18
-                                        sourceSize: Qt.size(18, 18)
-                                        RotationAnimation on rotation {
+                                }
+
+                                Button {
+                                    id: updateBtn
+                                    Layout.fillWidth: true
+                                    enabled: !updateState.checking
+
+                                    onClicked: {
+                                        settingsViewModel.checkForUpdates();
+                                    }
+
+                                    contentItem: RowLayout {
+                                        spacing: 8
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
+                                        Text {
+                                            text: updateState.checking ? "Checking..." : "Check for updates"
+                                            color: "white"
+                                            font.weight: Font.Bold
+                                            font.pixelSize: 14
+                                        }
+                                        Image {
+                                            source: Qt.resolvedUrl("../../assets/refresh-ccw.svg")
+                                            width: 18
+                                            height: 18
+                                            sourceSize: Qt.size(18, 18)
+                                            RotationAnimation on rotation {
                                             running: updateState.checking
                                             loops: Animation.Infinite
                                             from: 0
@@ -341,12 +392,11 @@ Page {
                                             color: "#0078d4"
                                         }
                                     }
-                                    opacity: updateBtn.pressed ? 0.9 : (updateState.checking ? 0.7 : 1.0)
+                                    opacity: updateBtn.pressed ? 0.9: (updateState.checking ? 0.7 : 1.0)
                                     scale: updateBtn.pressed ? 0.98 : 1.0
                                     Behavior on scale {
-                                        NumberAnimation {
-                                            duration: 50
-                                        }
+                                    NumberAnimation {
+                                        duration: 50
                                     }
                                 }
                             }
@@ -356,4 +406,5 @@ Page {
             }
         }
     }
+}
 }
