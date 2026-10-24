@@ -10,10 +10,15 @@ from viewmodels.settings_viewmodel import SettingsViewModel
 from viewmodels.loading_viewmodel import LoadingViewModel
 from viewmodels.var_edit_viewmodel import VarEditViewModel
 from viewmodels.custom_viewmodel import CustomViewModel
+from helpers.logger import create_logger
 
 template_version = "1.0.0" 
+log = create_logger("app", file_path="./logs/app.log")
 
 def main():
+
+    log.info("--- Log Attivo ---")
+
     app = QApplication(sys.argv)
 
     engine = QQmlApplicationEngine()
@@ -44,7 +49,6 @@ def main():
         sys.exit(-1)
 
     sys.exit(app.exec())
-
 
 if __name__ == "__main__":
     main()
